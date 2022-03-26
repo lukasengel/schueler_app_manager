@@ -22,6 +22,7 @@ class AppTheme {
     scaffoldBackgroundColor: const Color(0xffefeff4),
     colorScheme: ColorScheme.light(
       primary: primaryColor,
+      secondary: primaryColor,
       tertiary: Colors.white,
     ),
     indicatorColor: Colors.white,
@@ -92,6 +93,7 @@ class AppTheme {
     scaffoldBackgroundColor: Colors.grey.shade900,
     colorScheme: ColorScheme.dark(
       primary: primaryColorDark,
+      secondary: primaryColorDark,
       tertiary: Colors.grey.shade800,
       onTertiary: Colors.white,
     ),
