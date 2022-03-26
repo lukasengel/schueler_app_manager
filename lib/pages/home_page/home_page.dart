@@ -5,33 +5,44 @@ import './home_page_controller.dart';
 
 import './tabs/school_life_tab.dart';
 import './tabs/teachers_tab.dart';
+import './tabs/broadcast_tab.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  IconData getIcon(int index) {
+    switch (index) {
+      case 2:
+        return Icons.campaign_outlined;
+      default:
+        return Icons.add;
+    }
+  }
+
+  String getLabel(int index) {
+    switch (index) {
+      case 1:
+        return "home/add_teacher".tr;
+      case 2:
+        return "home/new_broadcast".tr;
+      default:
+        return "home/add_element".tr;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     Get.put(HomePageController());
     return GetBuilder<HomePageController>(builder: (controller) {
       return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             actions: [
               IconButton(
-                onPressed: controller.onPressedBroadcast,
-                icon: const Icon(Icons.campaign_outlined),
-                tooltip: "tooltips/broadcast".tr,
-              ),
-              IconButton(
                 onPressed: controller.onPressedRefresh,
                 icon: const Icon(Icons.refresh),
                 tooltip: "tooltips/refresh".tr,
-              ),
-              IconButton(
-                onPressed: controller.onPressedChangePassword,
-                icon: const Icon(Icons.key),
-                tooltip: "tooltips/change_password".tr,
               ),
               IconButton(
                 onPressed: controller.onPressedLogout,
@@ -54,7 +65,12 @@ class HomePage extends StatelessWidget {
                     children: [
                       Icon(Icons.people),
                       SizedBox(width: 10),
-                      Text("home/school_life".tr),
+                      Flexible(
+                        child: Text(
+                          "home/school_life".tr,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -64,7 +80,27 @@ class HomePage extends StatelessWidget {
                     children: [
                       Icon(Icons.history_edu),
                       SizedBox(width: 10),
-                      Text("home/teachers".tr),
+                      Flexible(
+                        child: Text(
+                          "home/teachers".tr,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.campaign),
+                      SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          "home/broadcasts".tr,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -75,13 +111,12 @@ class HomePage extends StatelessWidget {
             children: [
               SchoolLifeTab(),
               TeachersTab(),
+              BroadcastTab(),
             ],
           ),
           floatingActionButton: FloatingActionButton.extended(
-            label: Text(controller.currentTab == 0
-                ? "home/add_element".tr
-                : "home/add_teacher".tr),
-            icon: const Icon(Icons.add),
+            label: Text(getLabel(controller.currentTab)),
+            icon: Icon(getIcon(controller.currentTab)),
             onPressed: controller.onPressedAdd,
           ),
         ),

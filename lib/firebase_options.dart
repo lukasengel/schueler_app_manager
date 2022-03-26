@@ -6,4 +6,5 @@ const firebaseOptions = {
   "databaseURL":
       "https://gg-schueler-app-default-rtdb.europe-west1.firebasedatabase.app",
   "authDomain": "gg-schueler-app.firebaseapp.com",
+  "storageBucket": "gg-schueler-app.appspot.com",
 };

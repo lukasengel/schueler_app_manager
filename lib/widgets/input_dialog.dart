@@ -3,28 +3,27 @@ import 'package:get/get.dart';
 
 import '../models/teacher.dart';
 
-enum InputDialogType { TEACHER, PASSWORD, BROADCAST }
+enum InputType { TEACHER, BROADCAST }
 
-Future<dynamic> showInputDialog<T>(InputDialogType type,
-    {Teacher? teacherToEdit}) async {
+Future<dynamic> showInputDialog(InputType type, {Teacher? teacher}) async {
   final controller1 = TextEditingController();
   final controller2 = TextEditingController();
   final focus = FocusNode();
   final index = type.index;
   focus.requestFocus();
+  bool edit = false;
 
-  if (teacherToEdit != null) {
-    controller1.text = teacherToEdit.abbreviation;
-    controller2.text = teacherToEdit.name;
+  if (teacher != null) {
+    controller1.text = teacher.abbreviation;
+    controller2.text = teacher.name;
+    edit = true;
   }
 
-  void submit() {
-    Get.back(result: {
-      "1": controller1.text,
-      "2": controller2.text,
-      "cancel": false,
-    });
-  }
+  void submit() => Get.back(result: {
+        "1": controller1.text,
+        "2": controller2.text,
+        "cancel": false,
+      });
 
   final input = await Get.dialog(
     Theme(
@@ -33,9 +32,9 @@ Future<dynamic> showInputDialog<T>(InputDialogType type,
         colorScheme: Get.theme.colorScheme,
       ),
       child: AlertDialog(
-        title: Text(teacherToEdit == null
-            ? "dialogs/$index/title".tr
-            : "dialogs/$index/title_edit".tr),
+        title: Text(
+          edit ? "dialogs/$index/title_edit".tr : "dialogs/$index/title".tr,
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

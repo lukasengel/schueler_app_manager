@@ -28,10 +28,10 @@ class SchoolLifeItem {
   String content;
   ItemType type;
   DateTime datetime;
-  String hyperlink;
-  String imageUrl;
-  DateTime eventTime;
-  bool dark;
+  String? hyperlink;
+  String? imageUrl;
+  DateTime? eventTime;
+  bool? dark;
 
   SchoolLifeItem({
     required this.identifier,
@@ -39,10 +39,10 @@ class SchoolLifeItem {
     required this.content,
     required this.type,
     required this.datetime,
-    required this.hyperlink,
-    required this.imageUrl,
-    required this.eventTime,
-    required this.dark,
+    this.hyperlink,
+    this.imageUrl,
+    this.eventTime,
+    this.dark,
   });
 
   factory SchoolLifeItem.fromJson(Map<String, dynamic> json, String id) {
@@ -58,8 +58,8 @@ class SchoolLifeItem {
       datetime: DateTime.tryParse(getString("datetime")) ?? DateTime.now(),
       hyperlink: getString("hyperlink"),
       imageUrl: getString("imageUrl"),
-      eventTime: DateTime.tryParse(getString("eventTime")) ?? DateTime.now(),
-      dark: json.containsKey("dark") ? json["dark"] as bool : false,
+      eventTime: DateTime.tryParse(getString("eventTime")),
+      dark: json.containsKey("dark") ? json["dark"] as bool : null,
     );
   }
 
@@ -68,10 +68,10 @@ class SchoolLifeItem {
       "header": header,
       "content": content,
       "type": stringFromType(type),
-      "datetime": datetime,
+      "datetime": datetime.toIso8601String(),
       "hyperlink": hyperlink,
       "imageUrl": imageUrl,
-      "eventTime": eventTime,
+      "eventTime": eventTime?.toIso8601String(),
       "dark": dark,
     };
   }

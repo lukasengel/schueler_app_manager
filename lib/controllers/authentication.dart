@@ -22,7 +22,7 @@ class Authentication extends GetxController {
   }
 
   Future<void> login(String username, String password) async {
-    final webData =   Get.put(WebData());
+    final webData = Get.put(WebData());
     try {
       if (username.isEmpty || password.isEmpty) {
         throw ("login/errors/empty_credentials".tr);

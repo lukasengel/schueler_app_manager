@@ -6,9 +6,10 @@ Flutter-basierte Webanwendung zur Verwaltung der Schüler-App des Gnadenthal-Gym
 Erreichbar unter: https://gg-schueler-app.web.app/
 
 ## Funktionen
-- [ ] Anpassung der Inhalte auf der Schulleben-Seite
+- [x] Anpassung der Inhalte auf der Schulleben-Seite
 - [x] Lehrerkürzel-Verwaltung
-- [ ] Rundnachrichten
+- [x] Rundnachrichten
+- [x] Nachtmodus
 - [ ] Änderung der Zugangsdaten
 
 ## Lizenz

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../pages/home_page/home_page.dart';
 import '../../controllers/authentication.dart';
-
-import '../../widgets/snackbar.dart';
+import '../../widgets/execute_with_error_handling.dart';
 
 class LoginPageController extends GetxController {
   final authentication = Get.find<Authentication>();
@@ -16,26 +16,14 @@ class LoginPageController extends GetxController {
     obscure.value = !obscure.value;
   }
 
-  void onSubmitted(_) => login();
-
-  void onPressedLogin() => login();
-
   Future<void> login() async {
     working.value = true;
-    try {
+    await executeWithErrorHandling(null, () async {
       await Future.delayed(const Duration(seconds: 1));
       await Get.find<Authentication>()
           .login(usernameController.text, passwortController.text);
-      Get.offAndToNamed("/home");
-    } catch (e) {
-      showSnackBar(
-        context: Get.context!,
-        snackbar: SnackBar(
-          content: Text(e.toString()),
-          action: SnackBarAction(label: "OK", onPressed: Get.back),
-        ),
-      );
-    }
+      Get.off(() => HomePage());
+    });
     working.value = false;
   }
 }

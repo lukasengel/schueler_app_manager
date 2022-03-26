@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import './pages/login_page/login_page.dart';
-import './pages/home_page/home_page.dart';
 import './controllers/authentication.dart';
 
 import './firebase_options.dart';
@@ -15,12 +14,8 @@ void main() async {
   await Firebase.initializeApp(
     options: FirebaseOptions.fromMap(firebaseOptions),
   );
-  //TODO: Remove auto-login
   //TODO: Password change
-  //TODO: Schulleben
-  //TODO: Rundnachrichten-Tab
-  //TODO: Leere Page Daten in Benachrichtigung
-  await Get.put(Authentication()).login("bass", "JustusStinkt");
+  await Get.put(Authentication());
   runApp(const MyApp());
 }
 
@@ -36,11 +31,7 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.dark,
       locale: const Locale("de", "DE"),
       translationsKeys: translationKeys,
-      initialRoute: "/login",
-      getPages: [
-        GetPage(name: "/login", page: ()=>  LoginPage()),
-        GetPage(name: "/home", page: ()=> const HomePage()),
-      ],
+      home: const LoginPage(),
     );
   }
 }

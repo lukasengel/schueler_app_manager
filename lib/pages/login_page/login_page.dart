@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './login_page_controller.dart';
 
 class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,6 @@ class LoginPage extends StatelessWidget {
                               Divider(
                                 height: 3,
                                 indent: 25,
-                                color: Get.theme.colorScheme.onTertiary,
                               ),
                               Obx(
                                 () => TextField(
@@ -135,7 +134,7 @@ class LoginPage extends StatelessWidget {
                                   controller: controller.passwortController,
                                   textInputAction: TextInputAction.done,
                                   obscureText: controller.obscure.value,
-                                  onSubmitted: controller.onSubmitted,
+                                  onSubmitted: (_) => controller.login(),
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -145,7 +144,7 @@ class LoginPage extends StatelessWidget {
                                   () => SizedBox(
                                     width: double.infinity,
                                     child: ElevatedButton(
-                                      onPressed: controller.onPressedLogin,
+                                      onPressed: controller.login,
                                       child: controller.working.value
                                           ? const SpinKitThreeBounce(
                                               color: Colors.white,

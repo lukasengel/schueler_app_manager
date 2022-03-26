@@ -1,46 +1,33 @@
 import 'package:flutter/material.dart';
 
 const primaryColor = Colors.indigo;
+const primaryColorDark = Colors.lightBlue;
 
 /*
 PRIMARY:            AppBar, Buttons, Switches
-SECONDARY:          ScrollView Overflow
-ON SECONDARY:       Icons (SchoolLifeContainer), CupertinoPicker (CoursePicker)
 TERTIARY:           Replacement for CardColor
-ON TERTIARY:        Inactive Buttons, SettingsInfoBox, Chevron (SettingsTile), Divider, SuffixIcons
-TERTIARY CONTAINER: Search field (Abbreviations Page)
-INDICATOR COLOR:    Disabled dots of Page Indicator (SubstitutionTab)
 
 HEADLINE LARGE:     App Title (LoginScreen)
 HEADLINE MEDIUM:    Header (LoginScreen)
-HEADLINE SMALL:     Header (TableContainer, NewsItem)
-TITLE LARGE:        AppBar
 TITLE MEDIUM:       Leading Text (TeacherItem)
-TITLE SMALL:        SettingsText
-LABEL SMALL:        "Tap to read more" (SchoolLifeContainer)
-BODY LARGE:         Subheader (NewsItem), NewsTicker, SettingsTile
-BODY MEDIUM:        Header (SchoolLifeItemTile), Content (TeacherTile)
-BODY SMALL:         Content (SchoolLifeItemTile)
+LABEL SMALL:        Label (EditContainer), Datetime (BroadcastTile)
+BODY MEDIUM:        Header (SchoolLifeItemTile, BroadcastTile), Content (TeacherTile), Child (EditContainer)
+BODY SMALL:         Content (SchoolLifeItemTile, BroadcastTile)
 */
 
 class AppTheme {
   static ThemeData light = ThemeData(
+    brightness: Brightness.light,
     fontFamily: "Montserrat",
     scaffoldBackgroundColor: const Color(0xffefeff4),
     colorScheme: ColorScheme.light(
       primary: primaryColor,
-      secondary: primaryColor,
-      onSecondary: Colors.black,
       tertiary: Colors.white,
-      onTertiary: Colors.grey,
-      tertiaryContainer: Colors.grey.shade300,
     ),
-    indicatorColor: Colors.grey.shade800,
+    indicatorColor: Colors.white,
+    toggleableActiveColor: primaryColor,
     appBarTheme: const AppBarTheme(
       elevation: 1,
-    ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      selectedItemColor: primaryColor,
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Colors.white,
@@ -78,35 +65,15 @@ class AppTheme {
         fontSize: 24,
         letterSpacing: 1,
       ),
-      headlineSmall: const TextStyle(
-        fontSize: 21,
-        color: Colors.black,
-        letterSpacing: 0.8,
-      ),
       labelSmall: const TextStyle(
         fontSize: 15,
-        letterSpacing: 0,
         color: Colors.grey,
-        fontStyle: FontStyle.italic,
-      ),
-      titleSmall: TextStyle(
-        fontWeight: FontWeight.w400,
-        color: Colors.grey.shade800,
-        fontSize: 16,
-        // fontSize: 25,
+        letterSpacing: 0,
       ),
       titleMedium: TextStyle(
         color: Colors.black,
         fontSize: 18,
         fontWeight: FontWeight.bold,
-      ),
-      titleLarge: const TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.w400,
-      ),
-      bodyLarge: const TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 18,
       ),
       bodyMedium: const TextStyle(
         fontSize: 18,
@@ -120,37 +87,34 @@ class AppTheme {
   );
 
   static ThemeData dark = ThemeData(
+    brightness: Brightness.dark,
     fontFamily: "Montserrat",
-    scaffoldBackgroundColor: Colors.black,
+    scaffoldBackgroundColor: Colors.grey.shade900,
     colorScheme: ColorScheme.dark(
-      primary: primaryColor,
-      secondary: primaryColor,
-      onSecondary: Colors.white,
-      tertiary: const Color(0xff1c1c1e),
-      onTertiary: Colors.grey,
-      tertiaryContainer: Colors.grey.shade700,
+      primary: primaryColorDark,
+      tertiary: Colors.grey.shade800,
+      onTertiary: Colors.white,
     ),
-    selectedRowColor: Colors.grey.shade800,
-    indicatorColor: Colors.white,
+    indicatorColor: primaryColorDark,
+    dividerColor: Colors.white,
+    toggleableActiveColor: primaryColorDark,
     appBarTheme: const AppBarTheme(
-      color: Color(0xff1c1c1e),
-      foregroundColor: primaryColor,
+      foregroundColor: primaryColorDark,
       elevation: 1,
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      unselectedItemColor: Colors.white,
-      selectedItemColor: primaryColor,
-      backgroundColor: Color(0xff1c1c1e),
-    ),
+    tabBarTheme: TabBarTheme(labelColor: primaryColorDark),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Colors.grey[800],
-      foregroundColor: primaryColor,
+      backgroundColor: Colors.grey.shade800,
+      foregroundColor: primaryColorDark,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        textStyle: const TextStyle(fontSize: 25, fontFamily: "Montserrat"),
         onPrimary: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        textStyle: const TextStyle(
+          fontSize: 25,
+          fontFamily: "Montserrat",
+        ),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
@@ -165,56 +129,35 @@ class AppTheme {
     ),
     inputDecorationTheme: const InputDecorationTheme(
       border: InputBorder.none,
-      focusColor: primaryColor,
+      focusColor: primaryColorDark,
     ),
-    textTheme: const TextTheme(
-      headlineLarge: TextStyle(
+    textTheme: TextTheme(
+      headlineLarge: const TextStyle(
         fontSize: 50,
         color: Colors.white,
         fontFamily: "LobsterTwo",
       ),
-      headlineMedium: TextStyle(
-        color: primaryColor,
+      headlineMedium: const TextStyle(
+        color: primaryColorDark,
         fontWeight: FontWeight.w500,
         fontSize: 24,
         letterSpacing: 1,
       ),
-      headlineSmall: TextStyle(
-        fontSize: 21,
-        color: Colors.white,
-        letterSpacing: 0.8,
-      ),
       labelSmall: TextStyle(
         fontSize: 15,
+        color: Colors.grey.shade300,
         letterSpacing: 0,
-        color: Colors.grey,
-        fontStyle: FontStyle.italic,
-      ),
-      titleSmall: TextStyle(
-        fontWeight: FontWeight.w400,
-        color: Colors.grey,
-        fontSize: 16,
-        // fontSize: 25,
       ),
       titleMedium: TextStyle(
-        fontWeight: FontWeight.w800,
-        fontSize: 25,
-      ),
-      titleLarge: TextStyle(
-        color: primaryColor,
-        fontSize: 25,
-        fontWeight: FontWeight.w400,
-      ),
-      bodyLarge: TextStyle(
         color: Colors.white,
-        fontWeight: FontWeight.normal,
         fontSize: 18,
+        fontWeight: FontWeight.bold,
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: const TextStyle(
+        fontSize: 18,
         color: Colors.white,
-        fontSize: 16,
       ),
-      bodySmall: TextStyle(
+      bodySmall: const TextStyle(
         color: Colors.white,
         fontSize: 15,
       ),
