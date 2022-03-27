@@ -52,6 +52,7 @@ class EditPage extends StatelessWidget {
                 EditContainer(
                   label: "edit_page/header".tr,
                   child: TextField(
+                    textInputAction: TextInputAction.next,
                     onChanged: (_) => controller.validate(),
                     style: Get.textTheme.bodyMedium,
                     decoration: InputDecoration(
@@ -65,6 +66,7 @@ class EditPage extends StatelessWidget {
                 EditContainer(
                   label: "edit_page/content".tr,
                   child: TextField(
+                    textInputAction: TextInputAction.next,
                     onChanged: (_) => controller.validate(),
                     style: Get.textTheme.bodyMedium,
                     decoration: InputDecoration(
@@ -78,6 +80,7 @@ class EditPage extends StatelessWidget {
                 EditContainer(
                   label: "edit_page/hyperlink".tr,
                   child: TextField(
+                    textInputAction: TextInputAction.next,
                     onChanged: (_) => controller.validate(),
                     style: Get.textTheme.bodyMedium,
                     decoration: InputDecoration(
