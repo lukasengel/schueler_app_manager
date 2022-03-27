@@ -10,7 +10,7 @@ Erreichbar unter: https://gg-schueler-app.web.app/
 - [x] Lehrerkürzel-Verwaltung
 - [x] Rundnachrichten
 - [x] Nachtmodus
-- [ ] Änderung der Zugangsdaten
+- [x] Änderung der Zugangsdaten
 
 ## Lizenz
 Der Quellcode steht unter der MIT-Lizenz öffentlich zur Verfügung. Weitere Informationen unter license.txt.

@@ -14,7 +14,6 @@ void main() async {
   await Firebase.initializeApp(
     options: FirebaseOptions.fromMap(firebaseOptions),
   );
-  //TODO: Password change
   await Get.put(Authentication());
   runApp(const MyApp());
 }

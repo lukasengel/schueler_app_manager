@@ -32,7 +32,7 @@ class HomePageController extends GetxController {
       update();
     });
   }
-
+  
   void onPressedLogout() {
     executeWithErrorHandling(null, () async {
       await (Get.find<Authentication>().signOut());

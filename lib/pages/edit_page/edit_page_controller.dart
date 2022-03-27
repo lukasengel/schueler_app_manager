@@ -76,8 +76,6 @@ class EditPageController extends GetxController {
       }
       final filename = selection.files.single.name;
       final data = selection.files.single.bytes;
-
-      //Delete previous image from Firebase Storage
       if (uploadUrl != null) {
         await Get.find<WebData>().removeImage(uploadUrl!);
         uploadUrl = null;
@@ -135,9 +133,12 @@ class EditPageController extends GetxController {
 
   void cancel() async {
     final input = await showConfirmDialog(ConfirmDialogMode.DISCARD);
+
     if (input) {
       if (uploadUrl != null) {
-        await Get.find<WebData>().removeImage(uploadUrl!);
+        executeWithErrorHandling(null, () async {
+          await Get.find<WebData>().removeImage(uploadUrl!);
+        });
       }
       Get.back();
     }

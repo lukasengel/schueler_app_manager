@@ -35,11 +35,23 @@ class Authentication extends GetxController {
       await webData.fetchData();
       authState = AuthState.LOGGED_IN;
     } on FirebaseAuthException catch (e) {
-      throw(e.message ?? e.toString());
+      throw (e.message ?? e);
+    }
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    try {
+      if (firebaseUser.value != null) {
+        await firebaseUser.value!.updatePassword(newPassword);
+      }
+    } on FirebaseAuthException catch (e) {
+      throw (e.message ?? e);
     }
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    if (firebaseUser.value != null) {
+      await FirebaseAuth.instance.signOut();
+    }
   }
 }

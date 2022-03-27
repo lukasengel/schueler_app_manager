@@ -159,7 +159,14 @@ class LoginPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: TextButton.icon(
+                                  onPressed: controller.onPressedChangePassword,
+                                  label: Text("login/change_password".tr),
+                                  icon: Icon(Icons.key),
+                                ),
+                              ),
                             ],
                           ),
                         ),

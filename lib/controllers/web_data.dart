@@ -129,6 +129,15 @@ class WebData extends GetxController {
     broadcasts.add(broadcast);
   }
 
+  Future<void> changePassword(String newPassword) async {
+    final database = FirebaseDatabase.instance.ref("credentials/password");
+    await database.set(newPassword);
+  }
+
+  Future<void> testAdminAccess() async {
+    final database = FirebaseDatabase.instance.ref("credentials/testWrite");
+    await database.set("test");
+  }
   // ###################################################################################
   // #                                     REMOVERS                                    #
   // ###################################################################################
@@ -139,7 +148,7 @@ class WebData extends GetxController {
     }
     final database = FirebaseDatabase.instance.ref("schoolLife/$identifier");
     await database.remove();
-    if(imageUrl != null){
+    if (imageUrl != null) {
       await removeImage(imageUrl);
     }
     schoolLifeItems.removeWhere((element) => element.identifier == identifier);
@@ -168,6 +177,7 @@ class WebData extends GetxController {
   // ###################################################################################
   // #                                       IMAGE                                     #
   // ###################################################################################
+
   Future<String> uploadImage(String filename, Uint8List bytes) async {
     showWaitingDialog();
     final storage = FirebaseStorage.instance;

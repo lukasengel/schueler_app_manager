@@ -7,3 +7,15 @@
     margin-right: -50%;
     transform: translate(-50%, -50%)
 }
+
+body {
+    color: #212121;
+    background: #fff;
+}
+  
+@media (prefers-color-scheme: dark) {
+    body {
+      color: #eee;
+      background: #212121;
+    }
+}

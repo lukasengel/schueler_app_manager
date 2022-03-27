@@ -9,8 +9,8 @@ ThemeData get _getTheme {
   );
 }
 
-Future<bool> showWaitingDialog() async {
-  final input = await Get.dialog(
+void showWaitingDialog() {
+  Get.dialog(
     Theme(
       data: _getTheme,
       child: AlertDialog(
@@ -28,5 +28,4 @@ Future<bool> showWaitingDialog() async {
       ),
     ),
   );
-  return input ?? false;
 }

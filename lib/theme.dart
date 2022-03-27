@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const primaryColor = Colors.indigo;
-const primaryColorDark = Colors.lightBlue;
+const primaryColorDark = Colors.indigoAccent;
 
 /*
 PRIMARY:            AppBar, Buttons, Switches
@@ -25,6 +25,7 @@ class AppTheme {
       secondary: primaryColor,
       tertiary: Colors.white,
     ),
+    dividerColor: Colors.grey,
     indicatorColor: Colors.white,
     toggleableActiveColor: primaryColor,
     appBarTheme: const AppBarTheme(

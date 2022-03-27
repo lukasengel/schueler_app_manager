@@ -8,7 +8,9 @@ const translationKeys = {
     "login/login_button": "Anmelden",
     "login/errors/empty_credentials":
         "Bitte Nutzernamen und Passwort eingeben.",
-    
+    "login/change_password":"Schülerpaßwort ändern",
+    "login/change_password_success":"Schülerpaßwort erfolgreich geändert.",
+
     "home/school_life": "Schulleben",
     "home/teachers": "Lehrer",
     "home/add_element": "Element hinzufügen",
@@ -43,6 +45,18 @@ const translationKeys = {
     "dialogs/1/textField1": "Titel",
     "dialogs/1/textField2": "Inhalt",
     "dialogs/1/action": "Versenden",
+    "dialogs/2/title": "Zugriff bestätigen",
+    "dialogs/2/textField1": "Administratorkonto",
+    "dialogs/2/textField2": "Paßwort",
+    "dialogs/2/action": "Weiter",
+    "dialogs/3/title": "Alte Zugangsdaten",
+    "dialogs/3/textField1": "Benutzername",
+    "dialogs/3/textField2": "Paßwort",
+    "dialogs/3/action": "Weiter",
+    "dialogs/4/title": "Neues Paßwort",
+    "dialogs/4/textField1": "Paßwort",
+    "dialogs/4/textField2": "Paßwort bestätigen",
+    "dialogs/4/action": "Ändern",
 
     "edit_page/add_item": "Element hinzufügen",
     "edit_page/edit_item": "Element bearbeiten",

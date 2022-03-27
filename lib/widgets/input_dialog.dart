@@ -3,7 +3,13 @@ import 'package:get/get.dart';
 
 import '../models/teacher.dart';
 
-enum InputType { TEACHER, BROADCAST }
+enum InputType {
+  TEACHER,
+  BROADCAST,
+  ADMIN_PASSWORD,
+  OLD_PASSWORD,
+  NEW_PASSWORT
+}
 
 Future<dynamic> showInputDialog(InputType type, {Teacher? teacher}) async {
   final controller1 = TextEditingController();
@@ -13,6 +19,12 @@ Future<dynamic> showInputDialog(InputType type, {Teacher? teacher}) async {
   focus.requestFocus();
   bool edit = false;
 
+  RxBool valid = (type != InputType.NEW_PASSWORT).obs;
+
+  void validate(_) {
+    valid.value = controller1.text == controller2.text;
+  }
+
   if (teacher != null) {
     controller1.text = teacher.abbreviation;
     controller2.text = teacher.name;
@@ -20,8 +32,8 @@ Future<dynamic> showInputDialog(InputType type, {Teacher? teacher}) async {
   }
 
   void submit() => Get.back(result: {
-        "1": controller1.text,
-        "2": controller2.text,
+        "1": controller1.text.trim(),
+        "2": controller2.text.trim(),
         "cancel": false,
       });
 
@@ -40,6 +52,7 @@ Future<dynamic> showInputDialog(InputType type, {Teacher? teacher}) async {
           children: [
             TextField(
               controller: controller1,
+              onChanged: type == InputType.NEW_PASSWORT ? validate : null,
               focusNode: focus,
               decoration: InputDecoration(
                 hintText: "dialogs/$index/textField1".tr,
@@ -49,6 +62,8 @@ Future<dynamic> showInputDialog(InputType type, {Teacher? teacher}) async {
             SizedBox(height: 10),
             TextField(
               controller: controller2,
+              onChanged: type == InputType.NEW_PASSWORT ? validate : null,
+              obscureText: type == InputType.ADMIN_PASSWORD,
               decoration: InputDecoration(
                 hintText: "dialogs/$index/textField2".tr,
               ),
@@ -61,9 +76,11 @@ Future<dynamic> showInputDialog(InputType type, {Teacher? teacher}) async {
             onPressed: Get.back,
             child: Text("dialogs/cancel".tr.toUpperCase()),
           ),
-          TextButton(
-            onPressed: submit,
-            child: Text("dialogs/$index/action".tr.toUpperCase()),
+          Obx(
+            () => TextButton(
+              onPressed: valid.value ? submit : null,
+              child: Text("dialogs/$index/action".tr.toUpperCase()),
+            ),
           ),
         ],
       ),
