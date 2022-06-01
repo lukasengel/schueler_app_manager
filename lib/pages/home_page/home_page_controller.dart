@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../pages/login_page/login_page.dart';
 import '../../pages/edit_page/edit_page.dart';
 
 import '../../controllers/web_data.dart';
@@ -36,7 +37,7 @@ class HomePageController extends GetxController {
     executeWithErrorHandling(null, () async {
       await (Get.find<Authentication>().signOut());
       webData.clear();
-      Get.offNamed("/");
+      Get.off(LoginPage());
     });
   }
 
@@ -106,7 +107,7 @@ class HomePageController extends GetxController {
       final itemToEdit = webData.schoolLifeItems.firstWhere((element) {
         return element.identifier == identifier;
       });
-      final input = await Get.toNamed("/edit", arguments: itemToEdit);
+      final input = await Get.to(EditPage(), arguments: itemToEdit);
       if (input is SchoolLifeItem) {
         await webData.removeSchoolLifeItem(identifier, null);
         await webData.addSchoolLifeItem(input);
