@@ -134,9 +134,10 @@ class WebData extends GetxController {
     await database.set(newPassword);
   }
 
-  Future<void> testAdminAccess() async {
+  Future<void> testWriteAccess() async {
     final database = FirebaseDatabase.instance.ref("credentials/testWrite");
     await database.set("test");
+    await database.remove();
   }
   // ###################################################################################
   // #                                     REMOVERS                                    #

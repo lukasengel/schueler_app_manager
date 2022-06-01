@@ -17,25 +17,28 @@ class SchoolLifeTab extends StatelessWidget {
               child: ListView.separated(
                 itemBuilder: (context, index) {
                   final item = controller.webData.schoolLifeItems[index];
-                  return ListTile(
-                    onTap: () => controller.onPressedEditItem(item.identifier),
-                    minLeadingWidth: 80,
-                    tileColor: Get.theme.colorScheme.tertiary,
-                    title: Text(
-                      item.header,
-                      style: Get.textTheme.bodyMedium,
-                    ),
-                    subtitle: Text(
-                      item.content,
-                      style: Get.textTheme.bodySmall,
-                    ),
-                    trailing: IconButton(
-                      splashRadius: 20,
-                      icon: const Icon(Icons.remove_circle),
-                      color: Colors.red,
-                      onPressed: () =>
-                          controller.onPressedDeleteItem(item.identifier),
-                      tooltip: "tooltips/delete_item".tr,
+                  return Ink(
+                    color: context.theme.colorScheme.tertiary,
+                    child: ListTile(
+                      onTap: () =>
+                          controller.onPressedEditItem(item.identifier),
+                      minLeadingWidth: 80,
+                      title: Text(
+                        item.header,
+                        style: Get.textTheme.bodyMedium,
+                      ),
+                      subtitle: Text(
+                        item.content,
+                        style: Get.textTheme.bodySmall,
+                      ),
+                      trailing: IconButton(
+                        splashRadius: 20,
+                        icon: const Icon(Icons.remove_circle),
+                        color: Colors.red,
+                        onPressed: () =>
+                            controller.onPressedDeleteItem(item.identifier),
+                        tooltip: "tooltips/delete_item".tr,
+                      ),
                     ),
                   );
                 },

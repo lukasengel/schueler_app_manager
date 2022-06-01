@@ -17,26 +17,28 @@ class TeachersTab extends StatelessWidget {
               child: ListView.separated(
                 itemBuilder: (context, index) {
                   final teacher = controller.webData.teachers[index];
-                  return ListTile(
-                    onTap: () =>
-                        controller.onPressedEditTeacher(teacher.abbreviation),
-                    minLeadingWidth: 80,
-                    tileColor: Get.theme.colorScheme.tertiary,
-                    leading: Text(
-                      teacher.abbreviation,
-                      style: Get.textTheme.titleMedium,
-                    ),
-                    title: Text(
-                      teacher.name,
-                      style: Get.textTheme.bodyMedium,
-                    ),
-                    trailing: IconButton(
-                      splashRadius: 20,
-                      icon: const Icon(Icons.remove_circle),
-                      color: Colors.red,
-                      onPressed: () => controller
-                          .onPressedDeleteTeacher(teacher.abbreviation),
-                      tooltip: "tooltips/delete_item".tr,
+                  return Ink(
+                    color: context.theme.colorScheme.tertiary,
+                    child: ListTile(
+                      onTap: () =>
+                          controller.onPressedEditTeacher(teacher.abbreviation),
+                      minLeadingWidth: 80,
+                      leading: Text(
+                        teacher.abbreviation,
+                        style: Get.textTheme.titleMedium,
+                      ),
+                      title: Text(
+                        teacher.name,
+                        style: Get.textTheme.bodyMedium,
+                      ),
+                      trailing: IconButton(
+                        splashRadius: 20,
+                        icon: const Icon(Icons.remove_circle),
+                        color: Colors.red,
+                        onPressed: () => controller
+                            .onPressedDeleteTeacher(teacher.abbreviation),
+                        tooltip: "tooltips/delete_item".tr,
+                      ),
                     ),
                   );
                 },

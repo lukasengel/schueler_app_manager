@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../pages/home_page/home_page.dart';
-
 import '../../controllers/authentication.dart';
 import '../../controllers/web_data.dart';
 
@@ -21,6 +20,13 @@ class LoginPageController extends GetxController {
     obscure.value = !obscure.value;
   }
 
+  void clear() {
+    working.value = false;
+    obscure.value = true;
+    usernameController.clear();
+    passwortController.clear();
+  }
+
   Future<void> login() async {
     working.value = true;
     await executeWithErrorHandling(null, () async {
@@ -28,7 +34,9 @@ class LoginPageController extends GetxController {
       await authentication.login(
           usernameController.text, passwortController.text);
       Get.off(() => HomePage());
+      clear();
     });
+
     working.value = false;
   }
 
@@ -40,13 +48,13 @@ class LoginPageController extends GetxController {
 
       if (adminUsername.isNotEmpty && adminPassword.isNotEmpty) {
         await authentication.login(adminUsername, adminPassword);
-        await Get.find<WebData>().testAdminAccess();
+        await Get.find<WebData>().testWriteAccess();
         await authentication.signOut();
 
         input = await showInputDialog(InputType.OLD_PASSWORD);
         String oldUsername = input["1"];
         String oldPassword = input["2"];
-        
+
         if (oldUsername.isNotEmpty && oldPassword.isNotEmpty) {
           await authentication.login(oldUsername, oldPassword);
           input = await showInputDialog(InputType.NEW_PASSWORT);
