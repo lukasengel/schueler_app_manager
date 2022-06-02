@@ -20,6 +20,7 @@ class EditPage extends StatelessWidget {
           onPressed: controller.cancel,
           tooltip: "tooltips/back".tr,
         ),
+        centerTitle: false,
         title: Text("edit_page/${edit ? "edit" : "add"}_item".tr),
         actions: [
           if (edit)
