@@ -3,9 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/web_data.dart';
-
 import '../../models/school_life_item.dart';
+
 import '../../widgets/confirm_dialog.dart';
+import '../../widgets/waiting_dialog.dart';
 import '../../widgets/execute_with_error_handling.dart';
 
 class EditPageController extends GetxController {
@@ -18,7 +19,9 @@ class EditPageController extends GetxController {
   ItemType? type;
   SchoolLifeItem? itemToEdit;
 
-  String? uploadUrl;
+  List<String?> oldImages = [];
+  String? originalImage;
+  String? currentImage;
   RxBool validInput = false.obs;
 
   @override
@@ -33,7 +36,8 @@ class EditPageController extends GetxController {
       contentController.text = itemToEdit?.content ?? "";
       hyperlinkController.text = itemToEdit?.hyperlink ?? "";
       imageUrlController.text = itemToEdit?.imageUrl ?? "";
-      uploadUrl = itemToEdit?.imageUrl;
+      originalImage = itemToEdit?.imageUrl;
+      currentImage = itemToEdit?.imageUrl;
     }
     super.onInit();
   }
@@ -66,7 +70,7 @@ class EditPageController extends GetxController {
   }
 
   void updloadImage() async {
-    executeWithErrorHandling(null, () async {
+    await executeWithErrorHandling(null, () async {
       final selection = await FilePicker.platform.pickFiles(
         allowMultiple: false,
         type: FileType.image,
@@ -76,14 +80,17 @@ class EditPageController extends GetxController {
       }
       final filename = selection.files.single.name;
       final data = selection.files.single.bytes;
-      if (uploadUrl != null) {
-        await Get.find<WebData>().removeImage(uploadUrl!);
-        uploadUrl = null;
-      }
+      showWaitingDialog();
       final url = await Get.find<WebData>().uploadImage(filename, data!);
-      uploadUrl = url;
-      imageUrlController.text = url;
+      if (currentImage != null && url != currentImage) {
+        oldImages.add(currentImage);
+        currentImage = url;
+        imageUrlController.text = url;
+      }
     });
+    if (Get.isDialogOpen == true) {
+      Get.back();
+    }
     validate();
   }
 
@@ -105,9 +112,31 @@ class EditPageController extends GetxController {
       return;
     }
     executeWithErrorHandling(itemToEdit!.identifier, (String id) async {
-      await Get.find<WebData>().removeSchoolLifeItem(id, uploadUrl);
+      await Get.find<WebData>().removeSchoolLifeItem(id, currentImage);
       Get.back();
     });
+  }
+
+  Future<void> cleanup(bool cancel) async {
+    if (cancel) {
+      if (currentImage != originalImage) {
+        oldImages.add(currentImage);
+      }
+      oldImages.removeWhere((element) => element == originalImage);
+    } else {
+      oldImages.removeWhere((element) => element == currentImage);
+    }
+    showWaitingDialog();
+    for (String? element in oldImages) {
+      if (element != null) {
+        await executeWithErrorHandling(null, () async {
+          await Get.find<WebData>().removeImage(element);
+        });
+      }
+    }
+    if (Get.isDialogOpen == true) {
+      Get.back();
+    }
   }
 
   void submit() async {
@@ -127,19 +156,15 @@ class EditPageController extends GetxController {
         eventTime: type == ItemType.EVENT ? eventTime : null,
         dark: (type == ItemType.ARTICLE) ? colorMode == "dark" : null,
       );
+      await cleanup(false);
       Get.back(result: item);
     }
   }
 
   void cancel() async {
     final input = await showConfirmDialog(ConfirmDialogMode.DISCARD);
-
     if (input) {
-      if (uploadUrl != null) {
-        executeWithErrorHandling(null, () async {
-          await Get.find<WebData>().removeImage(uploadUrl!);
-        });
-      }
+      await cleanup(true);
       Get.back();
     }
   }

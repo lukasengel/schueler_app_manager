@@ -45,6 +45,11 @@ class HomePage extends StatelessWidget {
                 tooltip: "tooltips/refresh".tr,
               ),
               IconButton(
+                onPressed: controller.onPressedChangePassword,
+                icon: const Icon(Icons.key),
+                tooltip: "tooltips/change_password".tr,
+              ),
+              IconButton(
                 onPressed: controller.onPressedLogout,
                 icon: const Icon(Icons.logout),
                 tooltip: "tooltips/logout".tr,

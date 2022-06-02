@@ -1,12 +1,11 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:schueler_app_manager/models/credentials.dart';
 
 import 'web_data.dart';
 
-enum AuthState { LOGGED_IN, LOGGED_OFF }
-
 class Authentication extends GetxController {
-  AuthState authState = AuthState.LOGGED_OFF;
+  late Credentials session;
   late Rx<User?> firebaseUser;
 
   @override
@@ -17,12 +16,11 @@ class Authentication extends GetxController {
   }
 
   void changeState(User? user) {
-    authState = user != null ? AuthState.LOGGED_IN : AuthState.LOGGED_OFF;
     update();
   }
 
   Future<void> login(String username, String password) async {
-    final webData = Get.put(WebData());
+    final webData = Get.find<WebData>();
     try {
       if (username.isEmpty || password.isEmpty) {
         throw ("login/errors/empty_credentials".tr);
@@ -33,7 +31,6 @@ class Authentication extends GetxController {
       );
       ever(firebaseUser, changeState);
       await webData.fetchData();
-      authState = AuthState.LOGGED_IN;
     } on FirebaseAuthException catch (e) {
       throw (e.message ?? e);
     }

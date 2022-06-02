@@ -24,6 +24,7 @@ class AppTheme {
       primary: primaryColor,
       secondary: primaryColor,
       tertiary: Colors.white,
+      onTertiary: Colors.grey.shade200,
     ),
     dividerColor: Colors.grey,
     indicatorColor: Colors.white,
@@ -50,10 +51,6 @@ class AppTheme {
           ),
         ),
       ),
-    ),
-    inputDecorationTheme: const InputDecorationTheme(
-      border: InputBorder.none,
-      focusColor: primaryColor,
     ),
     textTheme: TextTheme(
       headlineLarge: const TextStyle(
@@ -96,7 +93,8 @@ class AppTheme {
       primary: primaryColorDark,
       secondary: primaryColorDark,
       tertiary: Colors.grey.shade800,
-      onTertiary: Colors.white,
+      onTertiary: Colors.grey.shade700,
+      onTertiaryContainer: Colors.white,
     ),
     indicatorColor: primaryColorDark,
     dividerColor: Colors.white,

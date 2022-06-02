@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../widgets/waiting_dialog.dart';
 import '../models/school_life_item.dart';
 import '../models/teacher.dart';
 import '../models/broadcast.dart';
@@ -180,19 +179,15 @@ class WebData extends GetxController {
   // ###################################################################################
 
   Future<String> uploadImage(String filename, Uint8List bytes) async {
-    showWaitingDialog();
     final storage = FirebaseStorage.instance;
     await storage.ref("images/$filename").putData(bytes);
-    Get.back();
     return await storage.ref("images/$filename").getDownloadURL();
   }
 
   Future<void> removeImage(String url) async {
     if (url.startsWith("https://firebasestorage.googleapis.com/")) {
-      showWaitingDialog();
       final storage = FirebaseStorage.instance;
       await storage.refFromURL(url).delete();
-      Get.back();
     }
   }
 }

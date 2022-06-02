@@ -8,8 +8,10 @@ import '../../controllers/authentication.dart';
 
 import '../../widgets/confirm_dialog.dart';
 import '../../widgets/input_dialog.dart';
+import '../../widgets/waiting_dialog.dart';
 import '../../widgets/execute_with_error_handling.dart';
 
+import '../../models/credentials.dart';
 import '../../models/teacher.dart';
 import '../../models/school_life_item.dart';
 
@@ -41,6 +43,42 @@ class HomePageController extends GetxController {
     });
   }
 
+  void onPressedChangePassword() async {
+    final auth = Get.find<Authentication>();
+
+    await executeWithErrorHandling(null, () async {
+      await webData.testWriteAccess();
+
+      Map input = await showInputDialog(InputType.OLD_PASSWORD);
+      final oldCredentials = Credentials(input["1"], input["2"]);
+
+      if (oldCredentials.isNotEmpty) {
+        await auth.signOut();
+        await auth.login(oldCredentials.username, oldCredentials.password);
+
+        input = await showInputDialog(InputType.NEW_PASSWORT);
+        String newPassword = input["1"];
+
+        if (newPassword.isNotEmpty) {
+          showWaitingDialog();
+          await auth.changePassword(newPassword);
+          await auth.signOut();
+
+          await auth.login(auth.session.username, auth.session.password);
+          await webData.changePassword(newPassword);
+          throw ("home/change_password_success".tr);
+        }
+      }
+      throw ("error/invalid_input".tr);
+    });
+
+    await auth.signOut();
+    await auth.login(auth.session.username, auth.session.password);
+    if (Get.isDialogOpen == true) {
+      Get.back();
+    }
+  }
+
   // ###################################################################################
   // #                                      ADD                                        #
   // ###################################################################################
@@ -62,7 +100,7 @@ class HomePageController extends GetxController {
   }
 
   Future<void> addItem() async {
-    final input = await Get.to(EditPage());
+    final input = await Get.to(() => EditPage());
     if (input is SchoolLifeItem) {
       await webData.addSchoolLifeItem(input);
     }
@@ -102,12 +140,12 @@ class HomePageController extends GetxController {
   void onPressedEditItem(String identifier) async {
     executeWithErrorHandling(null, () async {
       if (identifier.startsWith("item")) {
-        throw "error/write_protection".tr;
+        throw ("error/write_protection".tr);
       }
       final itemToEdit = webData.schoolLifeItems.firstWhere((element) {
         return element.identifier == identifier;
       });
-      final input = await Get.to(EditPage(), arguments: itemToEdit);
+      final input = await Get.to(() => EditPage(), arguments: itemToEdit);
       if (input is SchoolLifeItem) {
         await webData.removeSchoolLifeItem(identifier, null);
         await webData.addSchoolLifeItem(input);

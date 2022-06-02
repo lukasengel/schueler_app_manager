@@ -63,127 +63,118 @@ class LoginPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-              child: SafeArea(
-                top: false,
-                bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "login/login_header".tr,
-                            style: Get.textTheme.headlineMedium,
-                          ),
+              padding: EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 15,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 15),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "login/login_header".tr,
+                          style: Get.textTheme.headlineMedium,
                         ),
-                        const SizedBox(height: 15),
-                        // ###################################################################################
-                        // #                                  LOGIN FORM                                     #
-                        // ###################################################################################
-                        SizedBox(
-                          width: context.width >= 800
-                              ? context.width / 2
-                              : double.infinity,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                enableSuggestions: false,
-                                autocorrect: false,
-                                style: context.textTheme.bodyMedium,
-                                decoration: InputDecoration(
-                                  hintText: "login/username".tr,
-                                ),
-                                autofillHints: const [AutofillHints.username],
-                                controller: controller.usernameController,
-                                textInputAction: TextInputAction.next,
-                              ),
-                              Divider(
-                                height: 3,
-                                indent: 25,
-                              ),
-                              Obx(
-                                () => TextField(
-                                  enableSuggestions: false,
-                                  autocorrect: false,
-                                  style: context.textTheme.bodyMedium,
-                                  decoration: InputDecoration(
-                                    hintText: "login/password".tr,
-                                    suffixIcon: IconButton(
-                                      splashRadius: 20,
-                                      icon: Icon(
-                                        controller.obscure.value
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                      ),
-                                      onPressed: controller.toggleVisibility,
-                                      color: Get.isDarkMode
-                                          ? Get.theme.colorScheme.onTertiary
-                                          : null,
-                                      tooltip: "tooltips/toggle_visibility".tr,
-                                    ),
-                                  ),
-                                  autofillHints: const [AutofillHints.password],
-                                  controller: controller.passwortController,
-                                  textInputAction: TextInputAction.done,
-                                  obscureText: controller.obscure.value,
-                                  onSubmitted: (_) => controller.login(),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Obx(
-                                  () => SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      onPressed: controller.login,
-                                      child: controller.working.value
-                                          ? const SpinKitThreeBounce(
-                                              color: Colors.white,
-                                            )
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child:
-                                                  Text("login/login_button".tr),
-                                            ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: TextButton.icon(
-                                  onPressed: controller.onPressedChangePassword,
-                                  label: Text("login/change_password".tr),
-                                  icon: Icon(Icons.key),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // ###################################################################################
-                        // #                                  BOTTOM TEXT                                    #
-                        // ###################################################################################
-                        Text(
-                          "general/school_name".tr.toUpperCase(),
-                          style: Get.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                    // ###################################################################################
+                    // #                                  LOGIN FORM                                     #
+                    // ###################################################################################
+                    SizedBox(
+                      width: context.width >= 800
+                          ? context.width / 2
+                          : double.infinity,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            style: context.textTheme.bodyMedium,
+                            decoration: InputDecoration(
+                              hintText: "login/username".tr,
+                              fillColor: Get.theme.colorScheme.onTertiary,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            autofillHints: const [AutofillHints.username],
+                            controller: controller.usernameController,
+                            textInputAction: TextInputAction.next,
+                          ),
+                          SizedBox(height: 10),
+                          Obx(
+                            () => TextField(
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              style: context.textTheme.bodyMedium,
+                              decoration: InputDecoration(
+                                hintText: "login/password".tr,
+                                suffixIcon: IconButton(
+                                  splashRadius: 20,
+                                  icon: Icon(
+                                    controller.obscure.value
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: controller.toggleVisibility,
+                                  color: Get.isDarkMode
+                                      ? Get
+                                          .theme.colorScheme.onTertiaryContainer
+                                      : null,
+                                  tooltip: "tooltips/toggle_visibility".tr,
+                                ),
+                                fillColor: Get.theme.colorScheme.onTertiary,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              autofillHints: const [AutofillHints.password],
+                              controller: controller.passwortController,
+                              textInputAction: TextInputAction.done,
+                              obscureText: controller.obscure.value,
+                              onSubmitted: (_) => controller.login(),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Obx(() => SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: controller.login,
+                                    child: controller.working.value
+                                        ? const SpinKitThreeBounce(
+                                            color: Colors.white,
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child:
+                                                Text("login/login_button".tr),
+                                          ),
+                                  ),
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // ###################################################################################
+                    // #                                  BOTTOM TEXT                                    #
+                    // ###################################################################################
+                    Text(
+                      "general/school_name".tr.toUpperCase(),
+                      style: Get.textTheme.bodySmall,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ],
                 ),
               ),
             ),
