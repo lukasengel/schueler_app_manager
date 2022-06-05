@@ -9,6 +9,8 @@ import './firebase_options.dart';
 import './translations.dart';
 import './theme.dart';
 
+//TODO: Image Upload improved
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       initialBinding: AppBindings(),
       popGesture: false,
-      defaultTransition: Transition.noTransition,
+      defaultTransition: Transition.fade,
       debugShowCheckedModeBanner: false,
       title: "Schüler-App Manager",
       theme: AppTheme.light,
