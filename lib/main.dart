@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       initialBinding: AppBindings(),
       popGesture: false,
+      defaultTransition: Transition.noTransition,
       debugShowCheckedModeBanner: false,
       title: "Schüler-App Manager",
       theme: AppTheme.light,
