@@ -59,7 +59,7 @@ Future<dynamic> showInputDialog(InputType type, {Teacher? teacher}) async {
               ),
               textInputAction: TextInputAction.next,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: controller2,
               onChanged: type == InputType.NEW_PASSWORT ? validate : null,

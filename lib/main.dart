@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.dark,
       locale: const Locale("de", "DE"),
       translationsKeys: translationKeys,
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }

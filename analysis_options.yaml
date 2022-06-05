@@ -2,3 +2,4 @@ linter:
   rules:
     prefer_single_quotes: false
     constant_identifier_names: false
+    prefer_const_constructors: true

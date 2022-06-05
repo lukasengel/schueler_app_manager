@@ -39,7 +39,7 @@ class HomePageController extends GetxController {
     executeWithErrorHandling(null, () async {
       await (Get.find<Authentication>().signOut());
       webData.clear();
-      Get.off(LoginPage());
+      Get.off(const LoginPage());
     });
   }
 
@@ -100,7 +100,7 @@ class HomePageController extends GetxController {
   }
 
   Future<void> addItem() async {
-    final input = await Get.to(() => EditPage());
+    final input = await Get.to(() => const EditPage());
     if (input is SchoolLifeItem) {
       await webData.addSchoolLifeItem(input);
     }
@@ -145,7 +145,7 @@ class HomePageController extends GetxController {
       final itemToEdit = webData.schoolLifeItems.firstWhere((element) {
         return element.identifier == identifier;
       });
-      final input = await Get.to(() => EditPage(), arguments: itemToEdit);
+      final input = await Get.to(() => const EditPage(), arguments: itemToEdit);
       if (input is SchoolLifeItem) {
         await webData.removeSchoolLifeItem(identifier, null);
         await webData.addSchoolLifeItem(input);

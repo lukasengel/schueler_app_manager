@@ -52,7 +52,7 @@ class AppTheme {
         ),
       ),
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       headlineLarge: const TextStyle(
         fontSize: 50,
         color: Colors.white,
@@ -103,7 +103,7 @@ class AppTheme {
       foregroundColor: primaryColorDark,
       elevation: 1,
     ),
-    tabBarTheme: TabBarTheme(labelColor: primaryColorDark),
+    tabBarTheme: const TabBarTheme(labelColor: primaryColorDark),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: Colors.grey.shade800,
       foregroundColor: primaryColorDark,
@@ -149,7 +149,7 @@ class AppTheme {
         color: Colors.grey.shade300,
         letterSpacing: 0,
       ),
-      titleMedium: TextStyle(
+      titleMedium: const TextStyle(
         color: Colors.white,
         fontSize: 18,
         fontWeight: FontWeight.bold,

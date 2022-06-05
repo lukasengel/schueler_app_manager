@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/school_life_item.dart';
-import './edit_page_controller.dart';
-import './edit_widgets.dart';
+import 'package:schueler_app_manager/models/article.dart';
 
-class EditPage extends StatelessWidget {
-  const EditPage({Key? key}) : super(key: key);
+import './article_editor_controller.dart';
+
+import '../edit_page/edit_widgets.dart';
+import './article_widgets.dart';
+
+class ArticleEditor extends StatelessWidget {
+  const ArticleEditor({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(EditPageController());
+    final controller = Get.put(ArticleEditorController());
     final edit = controller.itemToEdit != null;
 
     return Scaffold(
@@ -40,18 +43,20 @@ class EditPage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: GetBuilder<EditPageController>(builder: (controller) {
+        child: GetBuilder<ArticleEditorController>(builder: (controller) {
           return ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1000),
             child: ListView(
               children: [
-                EditDropdownButton(
+                ArticleDropdownButton(
                   value: controller.type.toString(),
                   onChanged: controller.changeType,
                 ),
                 const Divider(height: 0),
                 EditContainer(
-                  label: "edit_page/header".tr,
+                  label: controller.type == ArticleElementType.IMAGE
+                      ? "article_editor/image_url".tr
+                      : "article_editor/text".tr,
                   child: TextField(
                     textInputAction: TextInputAction.next,
                     onChanged: (_) => controller.validate(),
@@ -60,52 +65,17 @@ class EditPage extends StatelessWidget {
                       border: UnderlineInputBorder(),
                       contentPadding: EdgeInsets.zero,
                     ),
-                    controller: controller.headerController,
+                    controller: controller.dataController,
                   ),
                 ),
-                const Divider(height: 0),
-                EditContainer(
-                  label: "edit_page/content".tr,
-                  child: TextField(
-                    textInputAction: TextInputAction.next,
-                    onChanged: (_) => controller.validate(),
-                    style: Get.textTheme.bodyMedium,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    controller: controller.contentController,
-                  ),
-                ),
-                const Divider(height: 0),
-                EditContainer(
-                  label: "edit_page/hyperlink".tr,
-                  child: TextField(
-                    textInputAction: TextInputAction.next,
-                    onChanged: (_) => controller.validate(),
-                    style: Get.textTheme.bodyMedium,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    controller: controller.hyperlinkController,
-                  ),
-                ),
-                if (controller.type == ItemType.ARTICLE)
+                if (controller.type == ArticleElementType.IMAGE)
                   Column(
                     children: [
-                      const Divider(height: 0),
-                      EditImagePicker(
-                        controller: controller.imageUrlController,
-                        onPressedUpload: controller.updloadImage,
-                        onChanged: (_) => controller.validate(),
-                      ),
                       const Divider(height: 0),
                       EditContainer(
                         label: "edit_page/image_copyright".tr,
                         child: TextField(
                           textInputAction: TextInputAction.next,
-                          onChanged: (_) => controller.validate(),
                           style: Get.textTheme.bodyMedium,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -115,27 +85,25 @@ class EditPage extends StatelessWidget {
                         ),
                       ),
                       const Divider(height: 0),
+                      EditContainer(
+                        label: "article_page/description".tr,
+                        child: TextField(
+                          textInputAction: TextInputAction.next,
+                          style: Get.textTheme.bodyMedium,
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          controller: controller.descriptionController,
+                        ),
+                      ),
+                      const Divider(height: 0),
                       EditRadioButton(
                         mode: controller.colorMode,
                         onChanged: controller.changeColorMode,
                       )
                     ],
                   ),
-                if (controller.type == ItemType.EVENT)
-                  Column(
-                    children: [
-                      const Divider(height: 0),
-                      EditDatePicker(
-                        datetime: controller.eventTime,
-                        changeDate: controller.changeEventTime,
-                      ),
-                    ],
-                  ),
-                const Divider(height: 0),
-                EditArticle(
-                  elements: controller.articleElements?.length ?? 0,
-                  editArticle: controller.editArticle,
-                ),
                 const SizedBox(height: 5),
                 Text(
                   "edit_page/required".tr,

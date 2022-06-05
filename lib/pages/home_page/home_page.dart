@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
             title: Row(
               children: [
                 Text("general/app_title".tr),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
               ],
             ),
             bottom: TabBar(
@@ -68,8 +68,8 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.people),
-                      SizedBox(width: 10),
+                      const Icon(Icons.people),
+                      const SizedBox(width: 10),
                       Flexible(
                         child: Text(
                           "home/school_life".tr,
@@ -83,8 +83,8 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.history_edu),
-                      SizedBox(width: 10),
+                      const Icon(Icons.history_edu),
+                      const SizedBox(width: 10),
                       Flexible(
                         child: Text(
                           "home/teachers".tr,
@@ -98,8 +98,8 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.campaign),
-                      SizedBox(width: 10),
+                      const Icon(Icons.campaign),
+                      const SizedBox(width: 10),
                       Flexible(
                         child: Text(
                           "home/broadcasts".tr,

@@ -20,8 +20,8 @@ void showWaitingDialog() {
         ),
         content: Row(
           children: [
-            CircularProgressIndicator(),
-            SizedBox(width: 10),
+            const CircularProgressIndicator(),
+            const SizedBox(width: 10),
             Text("dialog/waiting_message".tr),
           ],
         ),

@@ -63,7 +63,7 @@ class LoginPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 15,
               ),
@@ -108,7 +108,7 @@ class LoginPage extends StatelessWidget {
                             controller: controller.usernameController,
                             textInputAction: TextInputAction.next,
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Obx(
                             () => TextField(
                               enableSuggestions: false,

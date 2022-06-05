@@ -35,7 +35,7 @@ class LoginPageController extends GetxController {
         usernameController.text.trim(),
         passwortController.text.trim(),
       );
-      Get.off(() => HomePage());
+      Get.off(() => const HomePage());
       clear();
     });
     working.value = false;

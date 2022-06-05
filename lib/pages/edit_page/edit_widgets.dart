@@ -12,7 +12,7 @@ class EditContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: context.theme.colorScheme.tertiary,
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         horizontal: 5,
         vertical: 10,
       ),
@@ -98,7 +98,7 @@ class EditImagePicker extends StatelessWidget {
             child: TextField(
               onChanged: onChanged,
               style: Get.textTheme.bodyMedium,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
                 contentPadding: EdgeInsets.zero,
               ),
@@ -107,7 +107,7 @@ class EditImagePicker extends StatelessWidget {
           ),
           TextButton.icon(
             onPressed: onPressedUpload,
-            icon: Icon(Icons.upload),
+            icon: const Icon(Icons.upload),
             label: Text("edit_page/upload".tr),
           ),
         ],
@@ -175,8 +175,9 @@ class EditDatePicker extends StatelessWidget {
                   "edit_page/no_date_selected".tr,
                   style: Get.textTheme.labelSmall,
                 ),
-          TextButton(
-            child: Text("edit_page/select_date".tr),
+          TextButton.icon(
+            label: Text("edit_page/select_date".tr),
+            icon: const Icon(Icons.calendar_month_outlined),
             onPressed: () async {
               final input = await showDatePicker(
                 context: context,
@@ -188,6 +189,41 @@ class EditDatePicker extends StatelessWidget {
                 changeDate(input);
               }
             },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class EditArticle extends StatelessWidget {
+  final int elements;
+  final Function() editArticle;
+
+  EditArticle({required this.elements, required this.editArticle, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    bool empty = elements == 0;
+    return EditContainer(
+      label: "edit_page/text_article".tr,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            empty
+                ? "edit_page/no_article".tr
+                : "$elements" + "edit_page/article_elements".tr,
+            style: Get.textTheme.labelSmall,
+          ),
+          TextButton.icon(
+            icon: const Icon(Icons.edit),
+            label: Text(
+              (empty ? "edit_page/compose_article" : "edit_page/edit_article")
+                  .tr,
+            ),
+            onPressed: editArticle,
           ),
         ],
       ),

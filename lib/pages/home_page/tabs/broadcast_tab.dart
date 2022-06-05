@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import '../home_page_controller.dart';
 
 class BroadcastTab extends StatelessWidget {
-  const BroadcastTab({Key? key}) : super(key: key);
+  BroadcastTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,40 +18,38 @@ class BroadcastTab extends StatelessWidget {
               child: ListView.separated(
                 itemBuilder: (context, index) {
                   final broadcast = controller.webData.broadcasts[index];
-                  return Ink(
-                    color: context.theme.colorScheme.tertiary,
-                    child: ListTile(
-                      minLeadingWidth: 80,
-                      title: Text(
-                        broadcast.header,
-                        style: Get.textTheme.bodyMedium,
-                      ),
-                      subtitle: Text(
-                        broadcast.content,
-                        style: Get.textTheme.bodySmall,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            DateFormat("dd.MM.yyyy - H:mm")
-                                .format(broadcast.datetime),
-                            style: Get.textTheme.labelSmall,
-                          ),
-                          IconButton(
-                            splashRadius: 20,
-                            icon: const Icon(Icons.remove_circle),
-                            color: Colors.red,
-                            onPressed: () => controller
-                                .onPressedDeleteBroadcast(broadcast.identifier),
-                            tooltip: "tooltips/delete_item".tr,
-                          ),
-                        ],
-                      ),
+                  return ListTile(
+                    tileColor: context.theme.colorScheme.tertiary,
+                    minLeadingWidth: 80,
+                    title: Text(
+                      broadcast.header,
+                      style: Get.textTheme.bodyMedium,
+                    ),
+                    subtitle: Text(
+                      broadcast.content,
+                      style: Get.textTheme.bodySmall,
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          DateFormat("dd.MM.yyyy - H:mm")
+                              .format(broadcast.datetime),
+                          style: Get.textTheme.labelSmall,
+                        ),
+                        IconButton(
+                          splashRadius: 20,
+                          icon: const Icon(Icons.remove_circle),
+                          color: Colors.red,
+                          onPressed: () => controller
+                              .onPressedDeleteBroadcast(broadcast.identifier),
+                          tooltip: "tooltips/delete_item".tr,
+                        ),
+                      ],
                     ),
                   );
                 },
-                separatorBuilder: (context, index) => Divider(height: 0),
+                separatorBuilder: (context, index) => const Divider(height: 0),
                 itemCount: controller.webData.broadcasts.length,
               ),
             ),
