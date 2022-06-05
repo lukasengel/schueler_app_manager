@@ -10,7 +10,7 @@ import './translations.dart';
 import './theme.dart';
 
 //TODO: Image Upload improved
-
+//TODO: Article Editor as Dialog
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
