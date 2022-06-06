@@ -8,115 +8,149 @@ import './article_editor_controller.dart';
 import '../edit_page/edit_widgets.dart';
 import './article_widgets.dart';
 
+Future<ArticleElement?> showArticleEditor({ArticleElement? itemToEdit}) async {
+  Get.put(ArticleEditorController(itemToEdit));
+  final input = await showDialog(
+    barrierDismissible: false,
+    context: Get.context!,
+    builder: (context) => Dialog(
+      backgroundColor: Get.theme.scaffoldBackgroundColor,
+      child: Container(
+        constraints: const BoxConstraints(maxHeight: 600, maxWidth: 1000),
+        child: ArticleEditor(),
+      ),
+    ),
+  );
+  Get.delete<ArticleEditorController>();
+  return input is ArticleElement ? input : null;
+}
+
 class ArticleEditor extends StatelessWidget {
-  const ArticleEditor({Key? key}) : super(key: key);
+  ArticleEditor({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ArticleEditorController());
-    final edit = controller.itemToEdit != null;
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: controller.cancel,
-          tooltip: "tooltips/back".tr,
-        ),
-        centerTitle: false,
-        title: Text("edit_page/${edit ? "edit" : "add"}_item".tr),
-        actions: [
-          if (edit)
-            IconButton(
-              onPressed: controller.delete,
-              color: Colors.red,
-              icon: const Icon(Icons.delete),
-              tooltip: "tooltips/delete_item".tr,
-            ),
-          Obx(
-            () => IconButton(
-              tooltip: "tooltips/save".tr,
-              icon: const Icon(Icons.done),
-              onPressed: controller.validInput.value ? controller.submit : null,
+    return GetBuilder<ArticleEditorController>(builder: (controller) {
+      final edit = controller.itemToEdit != null;
+      return ListView(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    splashRadius: 20,
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: controller.cancel,
+                    tooltip: "tooltips/back".tr,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  "edit_page/${edit ? "edit" : "add"}_item".tr,
+                  textAlign: TextAlign.center,
+                  style: Get.textTheme.titleMedium,
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (edit)
+                      IconButton(
+                        splashRadius: 20,
+                        onPressed: controller.delete,
+                        color: Colors.red,
+                        icon: const Icon(Icons.delete),
+                        tooltip: "tooltips/delete_item".tr,
+                      ),
+                    Obx(
+                      () => IconButton(
+                        splashRadius: 20,
+                        tooltip: "tooltips/save".tr,
+                        icon: const Icon(Icons.done),
+                        onPressed: controller.validInput.value
+                            ? controller.submit
+                            : null,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 0),
+          ArticleDropdownButton(
+            value: controller.type.toString(),
+            onChanged: controller.changeType,
+          ),
+          const Divider(height: 0),
+          EditContainer(
+            label: controller.type == ArticleElementType.IMAGE
+                ? "article_editor/image_url".tr
+                : "article_editor/text".tr,
+            child: TextField(
+              maxLines: controller.type == ArticleElementType.IMAGE ? 1 : 20,
+              minLines: 1,
+              textInputAction: TextInputAction.next,
+              onChanged: (_) => controller.validate(),
+              style: Get.textTheme.bodyMedium,
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                contentPadding: EdgeInsets.zero,
+              ),
+              controller: controller.dataController,
             ),
           ),
-        ],
-      ),
-      body: Center(
-        child: GetBuilder<ArticleEditorController>(builder: (controller) {
-          return ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1000),
-            child: ListView(
+          if (controller.type == ArticleElementType.IMAGE)
+            Column(
               children: [
-                ArticleDropdownButton(
-                  value: controller.type.toString(),
-                  onChanged: controller.changeType,
-                ),
                 const Divider(height: 0),
                 EditContainer(
-                  label: controller.type == ArticleElementType.IMAGE
-                      ? "article_editor/image_url".tr
-                      : "article_editor/text".tr,
+                  label: "edit_page/image_copyright".tr,
                   child: TextField(
-                    maxLines:
-                        controller.type == ArticleElementType.IMAGE ? 1 : 20,
-                    minLines: 1,
                     textInputAction: TextInputAction.next,
-                    onChanged: (_) => controller.validate(),
                     style: Get.textTheme.bodyMedium,
+                    onChanged: (_) => controller.validate(),
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(),
                       contentPadding: EdgeInsets.zero,
                     ),
-                    controller: controller.dataController,
+                    controller: controller.imageCopyrightController,
                   ),
                 ),
-                if (controller.type == ArticleElementType.IMAGE)
-                  Column(
-                    children: [
-                      const Divider(height: 0),
-                      EditContainer(
-                        label: "edit_page/image_copyright".tr,
-                        child: TextField(
-                          textInputAction: TextInputAction.next,
-                          style: Get.textTheme.bodyMedium,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                          controller: controller.imageCopyrightController,
-                        ),
-                      ),
-                      const Divider(height: 0),
-                      EditContainer(
-                        label: "article_page/description".tr,
-                        child: TextField(
-                          textInputAction: TextInputAction.next,
-                          style: Get.textTheme.bodyMedium,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                          controller: controller.descriptionController,
-                        ),
-                      ),
-                      const Divider(height: 0),
-                      EditRadioButton(
-                        mode: controller.colorMode,
-                        onChanged: controller.changeColorMode,
-                      )
-                    ],
+                const Divider(height: 0),
+                EditContainer(
+                  label: "article_page/description".tr,
+                  child: TextField(
+                    textInputAction: TextInputAction.next,
+                    style: Get.textTheme.bodyMedium,
+                    onChanged: (_) => controller.validate(),
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    controller: controller.descriptionController,
                   ),
-                const SizedBox(height: 5),
-                Text(
-                  "edit_page/required".tr,
-                  style: Get.textTheme.labelSmall,
                 ),
+                const Divider(height: 0),
+                EditRadioButton(
+                  mode: controller.colorMode,
+                  onChanged: controller.changeColorMode,
+                )
               ],
             ),
-          );
-        }),
-      ),
-    );
+          const SizedBox(height: 5),
+          Text(
+            "edit_page/required".tr,
+            style: Get.textTheme.labelSmall,
+          ),
+        ],
+      );
+    });
   }
 }

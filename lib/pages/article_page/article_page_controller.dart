@@ -15,7 +15,7 @@ class ArticlePageController extends GetxController {
   }
 
   Future<void> addItem() async {
-    final input = await Get.to(() => const ArticleEditor());
+    final input = await showArticleEditor();
     if (input is ArticleElement) {
       articleElements.add(input);
       update();
@@ -23,8 +23,7 @@ class ArticlePageController extends GetxController {
   }
 
   Future<void> editItem(int index) async {
-    final input = await Get.to(() => const ArticleEditor(),
-        arguments: articleElements[index]);
+    final input = await showArticleEditor(itemToEdit: articleElements[index]);
     if (input is ArticleElement) {
       articleElements.removeAt(index);
       articleElements.insert(index, input);

@@ -8,6 +8,9 @@ import '../../models/article.dart';
 import '../../widgets/confirm_dialog.dart';
 
 class ArticleEditorController extends GetxController {
+  ArticleElement? itemToEdit;
+  ArticleEditorController(this.itemToEdit);
+
   final dataController = TextEditingController();
   final descriptionController = TextEditingController();
   final imageCopyrightController = TextEditingController();
@@ -21,11 +24,9 @@ class ArticleEditorController extends GetxController {
   RxBool validInput = false.obs;
 
   int? index;
-  ArticleElement? itemToEdit;
 
   @override
   void onInit() {
-    itemToEdit = Get.arguments;
     if (itemToEdit != null) {
       index = Get.find<ArticlePageController>()
           .articleElements

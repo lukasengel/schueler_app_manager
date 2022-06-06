@@ -9,7 +9,7 @@ TERTIARY:           Replacement for CardColor
 
 HEADLINE LARGE:     App Title (LoginScreen)
 HEADLINE MEDIUM:    Header (LoginScreen)
-TITLE MEDIUM:       Leading Text (TeacherItem)
+TITLE MEDIUM:       Leading Text (TeacherItem), Title Article Editor
 LABEL SMALL:        Label (EditContainer), Datetime (BroadcastTile)
 BODY MEDIUM:        Header (SchoolLifeItemTile, BroadcastTile), Content (TeacherTile), Child (EditContainer)
 BODY SMALL:         Content (SchoolLifeItemTile, BroadcastTile)
@@ -72,7 +72,7 @@ class AppTheme {
       titleMedium: TextStyle(
         color: Colors.black,
         fontSize: 18,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
       ),
       bodyMedium: const TextStyle(
         fontSize: 18,
