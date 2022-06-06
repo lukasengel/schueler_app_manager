@@ -24,6 +24,7 @@ class ArticleEditorController extends GetxController {
   String colorMode = "light";
   ArticleElementType? type;
 
+  String? originalData;
   String? externalImage;
   RxBool validInput = false.obs;
   int? index;
@@ -67,6 +68,7 @@ class ArticleEditorController extends GetxController {
         break;
       case "ArticleElementType.IMAGE":
         type = ArticleElementType.IMAGE;
+        dataController.clear();
         break;
       default:
         type = ArticleElementType.CONTENT;
