@@ -37,6 +37,7 @@ class SchoolLifeItem {
   String? hyperlink;
   String? imageUrl;
   String? imageCopyright;
+  bool? externalImage;
   DateTime? eventTime;
   bool? dark;
   List<ArticleElement> articleElements;
@@ -50,6 +51,7 @@ class SchoolLifeItem {
     this.hyperlink,
     this.imageUrl,
     this.imageCopyright,
+    this.externalImage,
     this.eventTime,
     this.dark,
     this.articleElements = const [],
@@ -86,6 +88,9 @@ class SchoolLifeItem {
       hyperlink: tryGetString("hyperlink"),
       imageUrl: tryGetString("imageUrl"),
       imageCopyright: tryGetString("imageCopyright"),
+      externalImage: json.containsKey("externalImage")
+          ? json["externalImage"] as bool
+          : null,
       eventTime: DateTime.tryParse(tryGetString("eventTime") ?? ""),
       dark: json.containsKey("dark") ? json["dark"] as bool : null,
       articleElements: articleElements,
@@ -93,7 +98,6 @@ class SchoolLifeItem {
   }
 
   Map<String, dynamic> toJson() {
-    print(articleElements);
     return {
       "header": header,
       "content": content,
@@ -102,6 +106,7 @@ class SchoolLifeItem {
       "hyperlink": hyperlink,
       "imageUrl": imageUrl,
       "imageCopyright": imageCopyright,
+      "externalImage": externalImage,
       "eventTime": eventTime?.toIso8601String(),
       "dark": dark,
       "articleElements": articleElements.isNotEmpty

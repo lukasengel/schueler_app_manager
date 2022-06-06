@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:schueler_app_manager/models/article.dart';
-
-import './article_editor_controller.dart';
-
 import '../edit_page/edit_widgets.dart';
+import './article_editor_controller.dart';
 import './article_widgets.dart';
 
-Future<ArticleElement?> showArticleEditor({ArticleElement? itemToEdit}) async {
-  Get.put(ArticleEditorController(itemToEdit));
+import '../../models/article.dart';
+
+Future<ArticleElement?> showArticleEditor({
+  ArticleElement? itemToEdit,
+  required String path,
+}) async {
+  Get.put(ArticleEditorController(itemToEdit, path));
   final input = await showDialog(
     barrierDismissible: false,
     context: Get.context!,
@@ -89,23 +91,32 @@ class ArticleEditor extends StatelessWidget {
             onChanged: controller.changeType,
           ),
           const Divider(height: 0),
-          EditContainer(
-            label: controller.type == ArticleElementType.IMAGE
-                ? "article_editor/image_url".tr
-                : "article_editor/text".tr,
-            child: TextField(
-              maxLines: controller.type == ArticleElementType.IMAGE ? 1 : 20,
-              minLines: 1,
-              textInputAction: TextInputAction.next,
-              onChanged: (_) => controller.validate(),
-              style: Get.textTheme.bodyMedium,
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                contentPadding: EdgeInsets.zero,
-              ),
-              controller: controller.dataController,
-            ),
-          ),
+          controller.type == ArticleElementType.IMAGE
+              ? EditImagePicker(
+                  onPressedUpload: controller.updloadImage,
+                  onPressedDelete: controller.deleteImage,
+                  onChangedImageMode: controller.changeImageMode,
+                  controller: controller.dataController,
+                  mode: controller.imageMode,
+                )
+              : EditContainer(
+                  label: controller.type == ArticleElementType.IMAGE
+                      ? "article_editor/image_url".tr
+                      : "article_editor/text".tr,
+                  child: TextField(
+                    maxLines:
+                        controller.type == ArticleElementType.IMAGE ? 1 : 20,
+                    minLines: 1,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (_) => controller.validate(),
+                    style: Get.textTheme.bodyMedium,
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    controller: controller.dataController,
+                  ),
+                ),
           if (controller.type == ArticleElementType.IMAGE)
             Column(
               children: [

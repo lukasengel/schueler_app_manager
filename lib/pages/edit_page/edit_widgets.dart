@@ -79,39 +79,85 @@ class EditDropdownButton extends StatelessWidget {
 
 class EditImagePicker extends StatelessWidget {
   final Function() onPressedUpload;
-  final Function(String)? onChanged;
+  final Function() onPressedDelete;
+
+  final Function(String) onChangedImageMode;
+  final Function(String)? onChangedUrl;
+
   final TextEditingController controller;
+  final String? mode;
+
   const EditImagePicker({
-    this.onChanged,
-    required this.controller,
     required this.onPressedUpload,
+    required this.onPressedDelete,
+    required this.onChangedImageMode,
+    this.onChangedUrl,
+    required this.controller,
+    required this.mode,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return EditContainer(
-      label: "edit_page/image_url".tr,
-      child: Row(
-        children: [
-          Flexible(
-            child: TextField(
-              onChanged: onChanged,
-              style: Get.textTheme.bodyMedium,
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                contentPadding: EdgeInsets.zero,
+    return Column(
+      children: [
+        EditContainer(
+          label: "edit_page/image_mode".tr,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(children: [
+                Radio(
+                  value: "external",
+                  groupValue: mode,
+                  onChanged: (_) => onChangedImageMode("external"),
+                ),
+                Text("edit_page/external".tr),
+              ]),
+              Row(children: [
+                Radio(
+                  value: "asset",
+                  groupValue: mode,
+                  onChanged: (_) => onChangedImageMode("asset"),
+                ),
+                Text("edit_page/asset".tr),
+              ]),
+            ],
+          ),
+        ),
+        const Divider(height: 0),
+        EditContainer(
+          label: "edit_page/image_url".tr,
+          child: Row(
+            children: [
+              Flexible(
+                child: TextField(
+                  enabled: mode == "external",
+                  onChanged: onChangedUrl,
+                  style: Get.textTheme.bodyMedium,
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  controller: controller,
+                ),
               ),
-              controller: controller,
-            ),
+              if (mode == "asset" && controller.text.isEmpty)
+                TextButton.icon(
+                  onPressed: onPressedUpload,
+                  icon: const Icon(Icons.upload),
+                  label: Text("edit_page/upload".tr),
+                ),
+              if (mode == "asset" && controller.text.isNotEmpty)
+                TextButton.icon(
+                  onPressed: onPressedDelete,
+                  icon: const Icon(Icons.close),
+                  label: Text("edit_page/delete".tr),
+                ),
+            ],
           ),
-          TextButton.icon(
-            onPressed: onPressedUpload,
-            icon: const Icon(Icons.upload),
-            label: Text("edit_page/upload".tr),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

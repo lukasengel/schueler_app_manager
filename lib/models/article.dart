@@ -42,6 +42,7 @@ class ArticleElement {
   final String? imageCopyright;
   final String? description;
   final bool? dark;
+  final bool? externalImage;
 
   const ArticleElement({
     required this.data,
@@ -49,6 +50,7 @@ class ArticleElement {
     this.description,
     this.imageCopyright,
     this.dark,
+    this.externalImage,
   });
 
   factory ArticleElement.fromJson(Map<String, dynamic> json) {
@@ -66,6 +68,9 @@ class ArticleElement {
       description: tryGetString("description"),
       imageCopyright: tryGetString("imageCopyright"),
       dark: json.containsKey("dark") ? json["dark"] as bool : null,
+      externalImage: json.containsKey("externalImage")
+          ? json["externalImage"] as bool
+          : null,
     );
   }
 
@@ -76,6 +81,7 @@ class ArticleElement {
       "description": description,
       "imageCopyright": imageCopyright,
       "dark": dark,
+      "externalImage": externalImage,
     };
   }
 }

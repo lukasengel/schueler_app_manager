@@ -11,7 +11,6 @@ class EditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(EditPageController());
-    final edit = controller.itemToEdit != null;
 
     return Scaffold(
       appBar: AppBar(
@@ -21,9 +20,9 @@ class EditPage extends StatelessWidget {
           tooltip: "tooltips/back".tr,
         ),
         centerTitle: false,
-        title: Text("edit_page/${edit ? "edit" : "add"}_item".tr),
+        title: Text("edit_page/${controller.edit ? "edit" : "add"}_item".tr),
         actions: [
-          if (edit)
+          if (controller.edit)
             IconButton(
               onPressed: controller.delete,
               color: Colors.red,
@@ -98,9 +97,12 @@ class EditPage extends StatelessWidget {
                     children: [
                       const Divider(height: 0),
                       EditImagePicker(
+                        mode: controller.imageMode,
                         controller: controller.imageUrlController,
                         onPressedUpload: controller.updloadImage,
-                        onChanged: (_) => controller.validate(),
+                        onPressedDelete: controller.deleteImage,
+                        onChangedUrl: (_) => controller.validate(),
+                        onChangedImageMode: controller.changeImageMode,
                       ),
                       const Divider(height: 0),
                       EditContainer(

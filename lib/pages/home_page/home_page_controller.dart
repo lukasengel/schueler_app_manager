@@ -147,7 +147,7 @@ class HomePageController extends GetxController {
       });
       final input = await Get.to(() => const EditPage(), arguments: itemToEdit);
       if (input is SchoolLifeItem) {
-        await webData.removeSchoolLifeItem(identifier, null);
+        await webData.removeSchoolLifeItem(identifier, false);
         await webData.addSchoolLifeItem(input);
       }
       update();
@@ -184,16 +184,16 @@ class HomePageController extends GetxController {
 
   void onPressedDeleteItem(String identifier) async {
     final input = await showConfirmDialog(ConfirmDialogMode.DELETE);
-    if (!input) {
-      return;
+    if (input) {
+      await executeWithErrorHandling(identifier, (String id) async {
+        showWaitingDialog();
+        await webData.removeSchoolLifeItem(id, true);
+        update();
+      });
+      if (Get.isDialogOpen == true) {
+        Get.back();
+      }
     }
-    final url = webData.schoolLifeItems
-        .firstWhere((element) => element.identifier == identifier)
-        .imageUrl;
-    executeWithErrorHandling(identifier, (String id) async {
-      await webData.removeSchoolLifeItem(id, url);
-      update();
-    });
   }
 
   void onPressedDeleteTeacher(String abbreviation) async {

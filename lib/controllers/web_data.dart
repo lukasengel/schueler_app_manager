@@ -142,14 +142,18 @@ class WebData extends GetxController {
   // #                                     REMOVERS                                    #
   // ###################################################################################
 
-  Future<void> removeSchoolLifeItem(String identifier, String? imageUrl) async {
+  Future<void> removeSchoolLifeItem(String identifier, bool images) async {
     if (identifier.startsWith("item")) {
       throw "error/write_protection".tr;
     }
     final database = FirebaseDatabase.instance.ref("schoolLife/$identifier");
     await database.remove();
-    if (imageUrl != null) {
-      await removeImage(imageUrl);
+    if (images) {
+      final storage = FirebaseStorage.instance;
+      final directory = await storage.ref("images/$identifier").list();
+      directory.items.forEach((element) async {
+        await element.delete();
+      });
     }
     schoolLifeItems.removeWhere((element) => element.identifier == identifier);
   }
@@ -178,10 +182,20 @@ class WebData extends GetxController {
   // #                                       IMAGE                                     #
   // ###################################################################################
 
-  Future<String> uploadImage(String filename, Uint8List bytes) async {
+  Future<String> uploadImage(
+    String filename,
+    String dir,
+    Uint8List bytes,
+  ) async {
+    int i = 1;
+    String file = filename;
+    while (await fileExists("images/$dir", file)) {
+      file = "$i-$filename";
+      i++;
+    }
     final storage = FirebaseStorage.instance;
-    await storage.ref("images/$filename").putData(bytes);
-    return await storage.ref("images/$filename").getDownloadURL();
+    await storage.ref("images/$dir/$file").putData(bytes);
+    return await storage.ref("images/$dir/$file").getDownloadURL();
   }
 
   Future<void> removeImage(String url) async {
@@ -189,5 +203,13 @@ class WebData extends GetxController {
       final storage = FirebaseStorage.instance;
       await storage.refFromURL(url).delete();
     }
+  }
+
+  Future<bool> fileExists(String dir, String filename) async {
+    final storage = FirebaseStorage.instance;
+    final directory = await storage.ref(dir).list();
+    return directory.items
+        .where((file) => file.fullPath == "$dir/$filename")
+        .isNotEmpty;
   }
 }

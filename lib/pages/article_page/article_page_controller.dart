@@ -7,15 +7,19 @@ import '../article_editor/article_editor.dart';
 
 class ArticlePageController extends GetxController {
   late List<ArticleElement> articleElements;
+  late String path;
 
   @override
   void onInit() {
-    articleElements = [...Get.arguments];
+    final Map args = Get.arguments;
+    path = args["path"];
+    print(path);
+    articleElements = [...args["elements"]];
     super.onInit();
   }
 
   Future<void> addItem() async {
-    final input = await showArticleEditor();
+    final input = await showArticleEditor(path: path);
     if (input is ArticleElement) {
       articleElements.add(input);
       update();
@@ -23,7 +27,8 @@ class ArticlePageController extends GetxController {
   }
 
   Future<void> editItem(int index) async {
-    final input = await showArticleEditor(itemToEdit: articleElements[index]);
+    final input =
+        await showArticleEditor(itemToEdit: articleElements[index], path: path);
     if (input is ArticleElement) {
       articleElements.removeAt(index);
       articleElements.insert(index, input);

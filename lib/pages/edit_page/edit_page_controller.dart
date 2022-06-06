@@ -21,31 +21,35 @@ class EditPageController extends GetxController {
 
   DateTime? eventTime;
   String colorMode = "light";
+  String imageMode = "external";
   ItemType? type;
-  SchoolLifeItem? itemToEdit;
   List<ArticleElement>? articleElements;
 
-  List<String?> oldImages = [];
-  String? originalImage;
-  String? currentImage;
+  String? externalImage;
   RxBool validInput = false.obs;
+
+  late bool edit;
+  late String identifier;
 
   @override
   void onInit() {
-    itemToEdit = Get.arguments;
-    if (itemToEdit != null) {
-      eventTime = itemToEdit?.eventTime;
-      colorMode =
-          (itemToEdit!.dark != null && itemToEdit!.dark!) ? "dark" : "light";
-      type = itemToEdit?.type;
-      headerController.text = itemToEdit?.header ?? "";
-      contentController.text = itemToEdit?.content ?? "";
-      hyperlinkController.text = itemToEdit?.hyperlink ?? "";
-      imageUrlController.text = itemToEdit?.imageUrl ?? "";
-      imageCopyrightController.text = itemToEdit?.imageCopyright ?? "";
-      originalImage = itemToEdit?.imageUrl;
-      currentImage = itemToEdit?.imageUrl;
-      articleElements = [...itemToEdit?.articleElements ?? []];
+    final itemToEdit = Get.arguments;
+    if (itemToEdit is SchoolLifeItem) {
+      edit = true;
+      identifier = itemToEdit.identifier;
+      eventTime = itemToEdit.eventTime;
+      colorMode = itemToEdit.dark == true ? "dark" : "light";
+      type = itemToEdit.type;
+      headerController.text = itemToEdit.header;
+      contentController.text = itemToEdit.content;
+      hyperlinkController.text = itemToEdit.hyperlink ?? "";
+      imageUrlController.text = itemToEdit.imageUrl ?? "";
+      imageCopyrightController.text = itemToEdit.imageCopyright ?? "";
+      articleElements = [...itemToEdit.articleElements];
+      imageMode = itemToEdit.externalImage == true ? "external" : "asset";
+    } else {
+      edit = false;
+      identifier = DateTime.now().hashCode.toString();
     }
     super.onInit();
   }
@@ -60,6 +64,51 @@ class EditPageController extends GetxController {
       valid = valid && imageUrlController.text.trim().isNotEmpty;
     }
     validInput.value = valid;
+  }
+
+  Future<void> updloadImage() async {
+    await executeWithErrorHandling(null, () async {
+      final selection = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.image,
+      );
+      if (selection == null) {
+        throw ("error/no_selection".tr);
+      }
+      final filename = selection.files.single.name;
+      final data = selection.files.single.bytes;
+      showWaitingDialog();
+      final url = await Get.find<WebData>().uploadImage(
+        filename,
+        identifier,
+        data!,
+      );
+      imageUrlController.text = url;
+    });
+    if (Get.isDialogOpen == true) {
+      Get.back();
+    }
+    validate();
+    update();
+  }
+
+  Future<void> deleteImage() async {
+    await executeWithErrorHandling(null, () async {
+      showWaitingDialog();
+      await Get.find<WebData>().removeImage(imageUrlController.text);
+      imageUrlController.clear();
+    });
+    if (Get.isDialogOpen == true) {
+      Get.back();
+    }
+    validate();
+    update();
+  }
+
+  void changeColorMode(String mode) {
+    colorMode = mode;
+    validate();
+    update();
   }
 
   void changeType(String? input) {
@@ -77,33 +126,17 @@ class EditPageController extends GetxController {
     update();
   }
 
-  Future<void> updloadImage() async {
-    await executeWithErrorHandling(null, () async {
-      final selection = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
-        type: FileType.image,
-      );
-      if (selection == null) {
-        throw ("error/no_selection".tr);
-      }
-      final filename = selection.files.single.name;
-      final data = selection.files.single.bytes;
-      showWaitingDialog();
-      final url = await Get.find<WebData>().uploadImage(filename, data!);
-      if (currentImage != null && url != currentImage) {
-        oldImages.add(currentImage);
-        currentImage = url;
-        imageUrlController.text = url;
-      }
-    });
-    if (Get.isDialogOpen == true) {
-      Get.back();
+  void changeImageMode(String mode) {
+    if (imageMode == "asset" && imageUrlController.text.isNotEmpty) {
+      return;
     }
-    validate();
-  }
-
-  void changeColorMode(String mode) {
-    colorMode = mode;
+    imageMode = mode;
+    if (mode == "asset") {
+      externalImage = imageUrlController.text;
+      imageUrlController.clear();
+    } else {
+      imageUrlController.text = externalImage ?? "";
+    }
     validate();
     update();
   }
@@ -115,8 +148,10 @@ class EditPageController extends GetxController {
   }
 
   Future<void> editArticle() async {
-    final input =
-        await Get.to(() => const ArticlePage(), arguments: articleElements);
+    final input = await Get.to(
+      () => const ArticlePage(),
+      arguments: {"path": identifier, "elements": articleElements},
+    );
     if (input is List<ArticleElement>) {
       if (input != articleElements) {
         articleElements = input;
@@ -129,40 +164,21 @@ class EditPageController extends GetxController {
   Future<void> delete() async {
     final input = await showConfirmDialog(ConfirmDialogMode.DELETE);
     if (input) {
-      executeWithErrorHandling(itemToEdit!.identifier, (String id) async {
-        await Get.find<WebData>().removeSchoolLifeItem(id, currentImage);
+      await executeWithErrorHandling(identifier, (String id) async {
+        showWaitingDialog();
+        await Get.find<WebData>().removeSchoolLifeItem(id, true);
         Get.back();
       });
-    }
-  }
-
-  Future<void> cleanup(bool cancel) async {
-    if (cancel) {
-      if (currentImage != originalImage) {
-        oldImages.add(currentImage);
-      }
-      oldImages.removeWhere((element) => element == originalImage);
-    } else {
-      oldImages.removeWhere((element) => element == currentImage);
-    }
-    showWaitingDialog();
-    for (String? element in oldImages) {
-      if (element != null) {
-        await executeWithErrorHandling(null, () async {
-          await Get.find<WebData>().removeImage(element);
-        });
-      }
     }
     if (Get.isDialogOpen == true) {
       Get.back();
     }
   }
 
-  void submit() async {
+  Future<void> submit() async {
     if (validInput.value) {
       final item = SchoolLifeItem(
-        identifier:
-            itemToEdit?.identifier ?? DateTime.now().hashCode.toString(),
+        identifier: identifier,
         header: headerController.text,
         content: contentController.text,
         type: type!,
@@ -176,19 +192,22 @@ class EditPageController extends GetxController {
                 imageCopyrightController.text.trim().isNotEmpty
             ? imageCopyrightController.text.trim()
             : null,
+        externalImage:
+            type == ItemType.ARTICLE ? imageMode == "external" : null,
         eventTime: type == ItemType.EVENT ? eventTime : null,
         dark: (type == ItemType.ARTICLE) ? colorMode == "dark" : null,
         articleElements: articleElements ?? [],
       );
-      await cleanup(false);
       Get.back(result: item);
     }
   }
 
-  void cancel() async {
+  Future<void> cancel() async {
     final input = await showConfirmDialog(ConfirmDialogMode.DISCARD);
     if (input) {
-      await cleanup(true);
+      if (imageMode == "asset") {
+        await deleteImage();
+      }
       Get.back();
     }
   }

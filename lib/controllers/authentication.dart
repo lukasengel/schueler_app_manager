@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:schueler_app_manager/models/credentials.dart';
 
-import 'web_data.dart';
+import '../models/credentials.dart';
+
+import './web_data.dart';
 
 class Authentication extends GetxController {
   late Credentials session;
