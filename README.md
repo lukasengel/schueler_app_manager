@@ -11,7 +11,9 @@ Erreichbar unter: https://gg-schueler-app.web.app/
 - [x] Rundnachrichten
 - [x] Nachtmodus
 - [x] Änderung der Zugangsdaten
-
+- [x] Artikel verfassen
+- [ ] Bilder für Artikel hochladen
+ 
 ## Lizenz
 Der Quellcode steht unter der MIT-Lizenz öffentlich zur Verfügung. Weitere Informationen unter license.txt.
 
