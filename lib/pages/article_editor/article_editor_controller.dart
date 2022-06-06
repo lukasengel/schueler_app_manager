@@ -17,6 +17,7 @@ class ArticleEditorController extends GetxController {
   ArticleEditorController(this.itemToEdit, this.path);
 
   final dataController = TextEditingController();
+  final imageUrlController = TextEditingController();
   final descriptionController = TextEditingController();
   final imageCopyrightController = TextEditingController();
 
@@ -38,7 +39,11 @@ class ArticleEditorController extends GetxController {
       final item = itemToEdit!;
 
       type = item.type;
-      dataController.text = item.data;
+      if (type == ArticleElementType.IMAGE) {
+        imageUrlController.text = item.data;
+      } else {
+        dataController.text = item.data;
+      }
       descriptionController.text = item.description ?? "";
       imageCopyrightController.text = item.imageCopyright ?? "";
       colorMode = (item.dark != null && item.dark!) ? "dark" : "light";
@@ -48,7 +53,12 @@ class ArticleEditorController extends GetxController {
   }
 
   void validate() {
-    validInput.value = dataController.text.trim().isNotEmpty && type != null;
+    if (type == ArticleElementType.IMAGE) {
+      validInput.value =
+          imageUrlController.text.trim().isNotEmpty && type != null;
+    } else {
+      validInput.value = dataController.text.trim().isNotEmpty && type != null;
+    }
   }
 
 // ###################################################################################
@@ -68,7 +78,6 @@ class ArticleEditorController extends GetxController {
         break;
       case "ArticleElementType.IMAGE":
         type = ArticleElementType.IMAGE;
-        dataController.clear();
         break;
       default:
         type = ArticleElementType.CONTENT;
@@ -84,15 +93,15 @@ class ArticleEditorController extends GetxController {
   }
 
   void changeImageMode(String mode) {
-    if (imageMode == "asset" && dataController.text.isNotEmpty) {
+    if (imageMode == "asset" && imageUrlController.text.isNotEmpty) {
       return;
     }
     imageMode = mode;
     if (mode == "asset") {
-      externalImage = dataController.text;
-      dataController.clear();
+      externalImage = imageUrlController.text;
+      imageUrlController.clear();
     } else {
-      dataController.text = externalImage ?? "";
+      imageUrlController.text = externalImage ?? "";
     }
     validate();
     update();
@@ -145,7 +154,9 @@ class ArticleEditorController extends GetxController {
   Future<void> submit() async {
     if (validInput.value) {
       final item = ArticleElement(
-        data: dataController.text,
+        data: type == ArticleElementType.IMAGE
+            ? imageUrlController.text.trim()
+            : dataController.text.trim(),
         description: type == ArticleElementType.IMAGE &&
                 imageCopyrightController.text.trim().isNotEmpty
             ? descriptionController.text

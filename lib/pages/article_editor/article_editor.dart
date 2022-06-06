@@ -96,7 +96,7 @@ class ArticleEditor extends StatelessWidget {
                   onPressedUpload: controller.updloadImage,
                   onPressedDelete: controller.deleteImage,
                   onChangedImageMode: controller.changeImageMode,
-                  controller: controller.dataController,
+                  controller: controller.imageUrlController,
                   mode: controller.imageMode,
                 )
               : EditContainer(
