@@ -9,8 +9,6 @@ import './firebase_options.dart';
 import './translations.dart';
 import './theme.dart';
 
-//TODO: Image Upload Article
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
