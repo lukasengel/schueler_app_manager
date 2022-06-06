@@ -26,6 +26,7 @@ class AppTheme {
       tertiary: Colors.white,
       onTertiary: Colors.grey.shade200,
     ),
+    disabledColor: Colors.grey,
     dividerColor: Colors.grey,
     indicatorColor: Colors.white,
     toggleableActiveColor: primaryColor,
@@ -97,6 +98,7 @@ class AppTheme {
       onTertiaryContainer: Colors.white,
     ),
     indicatorColor: primaryColorDark,
+    disabledColor: Colors.grey,
     dividerColor: Colors.white,
     toggleableActiveColor: primaryColorDark,
     appBarTheme: const AppBarTheme(
