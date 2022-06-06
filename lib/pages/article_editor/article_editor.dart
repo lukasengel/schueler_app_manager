@@ -58,6 +58,9 @@ class ArticleEditor extends StatelessWidget {
                       ? "article_editor/image_url".tr
                       : "article_editor/text".tr,
                   child: TextField(
+                    maxLines:
+                        controller.type == ArticleElementType.IMAGE ? 1 : 20,
+                    minLines: 1,
                     textInputAction: TextInputAction.next,
                     onChanged: (_) => controller.validate(),
                     style: Get.textTheme.bodyMedium,

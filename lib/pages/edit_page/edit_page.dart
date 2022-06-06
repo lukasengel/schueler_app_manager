@@ -67,6 +67,8 @@ class EditPage extends StatelessWidget {
                 EditContainer(
                   label: "edit_page/content".tr,
                   child: TextField(
+                    maxLines: 20,
+                    minLines: 1,
                     textInputAction: TextInputAction.next,
                     onChanged: (_) => controller.validate(),
                     style: Get.textTheme.bodyMedium,
