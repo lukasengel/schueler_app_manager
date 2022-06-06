@@ -47,7 +47,7 @@ class ArticleEditorController extends GetxController {
       descriptionController.text = item.description ?? "";
       imageCopyrightController.text = item.imageCopyright ?? "";
       colorMode = (item.dark != null && item.dark!) ? "dark" : "light";
-      imageMode = item.externalImage == true ? "external" : "asset";
+      imageMode = item.externalImage == false ? "asset" : "external";
     }
     super.onInit();
   }
