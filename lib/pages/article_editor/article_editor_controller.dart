@@ -54,11 +54,11 @@ class ArticleEditorController extends GetxController {
 
   void validate() {
     if (type == ArticleElementType.IMAGE) {
-      validInput.value =
-          imageUrlController.text.trim().isNotEmpty && type != null;
+      validInput.value = imageUrlController.text.trim().isNotEmpty;
     } else {
       validInput.value = dataController.text.trim().isNotEmpty && type != null;
     }
+    update();
   }
 
 // ###################################################################################
@@ -83,13 +83,11 @@ class ArticleEditorController extends GetxController {
         type = ArticleElementType.CONTENT;
     }
     validate();
-    update();
   }
 
   void changeColorMode(String mode) {
     colorMode = mode;
     validate();
-    update();
   }
 
   void changeImageMode(String mode) {
@@ -104,7 +102,6 @@ class ArticleEditorController extends GetxController {
       imageUrlController.text = externalImage ?? "";
     }
     validate();
-    update();
   }
 
 // ###################################################################################
@@ -131,7 +128,6 @@ class ArticleEditorController extends GetxController {
       Get.back();
     }
     validate();
-    update();
   }
 
   Future<void> deleteImage() async {
@@ -144,7 +140,6 @@ class ArticleEditorController extends GetxController {
       Get.back();
     }
     validate();
-    update();
   }
 
 // ###################################################################################
