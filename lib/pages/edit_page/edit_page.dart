@@ -87,7 +87,7 @@ class EditPage extends StatelessWidget {
                     child: TextFormField(
                       validator: (input) {
                         if (!controller.validateUrl(input)) {
-                          return "error";
+                          return "error/url_format".tr;
                         }
                       },
                       textInputAction: TextInputAction.next,

@@ -24,6 +24,7 @@ const translationKeys = {
     "error/write_protection":
         "Dieses Element ist schreibgeschützt. ~Der Entwickler :D",
     "error/no_selection": "Keine Auswahl",
+      "error/url_format": "Fehlerhaftes Format: URL muß mit 'http://' oder 'https://' beginnen.",
     "tooltips/toggle_visibility": "Paßwort ein-/ausblenden",
     "tooltips/refresh": "Aktualisieren",
     "tooltips/logout": "Abmelden",
