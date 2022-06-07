@@ -59,12 +59,19 @@ class EditPageController extends GetxController {
     bool valid = headerController.text.trim().isNotEmpty &&
         contentController.text.trim().isNotEmpty &&
         type != null;
+    valid = valid && validateUrl(hyperlinkController.text);
     if (type == ItemType.EVENT) {
       valid = valid && eventTime != null;
     } else if (type == ItemType.ARTICLE) {
       valid = valid && imageUrlController.text.trim().isNotEmpty;
     }
     validInput.value = valid;
+  }
+
+  bool validateUrl(input) {
+    return input.isEmpty ||
+        input.startsWith("http://") ||
+        input.startsWith("https://");
   }
 
   Future<void> updloadImage() async {
