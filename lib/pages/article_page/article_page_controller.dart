@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 
 import '../../widgets/confirm_dialog.dart';
 import '../../models/article.dart';
-
 import '../article_editor/article_editor.dart';
 
 class ArticlePageController extends GetxController {
