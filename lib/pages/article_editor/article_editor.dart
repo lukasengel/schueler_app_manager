@@ -161,6 +161,23 @@ class ArticleEditor extends StatelessWidget {
             "edit_page/required".tr,
             style: Get.textTheme.labelSmall,
           ),
+          if (controller.type == ArticleElementType.IMAGE)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.info, color: Get.textTheme.labelSmall?.color),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      "article_editor/image_warning".tr,
+                      style: Get.textTheme.labelSmall,
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       );
     });

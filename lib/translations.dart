@@ -103,5 +103,7 @@ const translationKeys = {
     "article_page/type/ArticleElementType.IMAGE": "Bild",
     "article_editor/image_url": "Graphik-URL*",
     "article_editor/text": "Text*",
+    "article_editor/image_warning":
+        "Hinweis: Nachdem Sie den Bildanhang eines Artikels verändert haben, können Sie diese Änderungen nicht mehr verwerfen.",
   },
 };

@@ -14,11 +14,11 @@ class EditPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: controller.cancel,
-          tooltip: "tooltips/back".tr,
-        ),
+        leading: Obx(() => IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: controller.canCancel.value ? controller.cancel : null,
+              tooltip: "tooltips/back".tr,
+            )),
         centerTitle: false,
         title: Text("edit_page/${controller.edit ? "edit" : "add"}_item".tr),
         actions: [

@@ -25,6 +25,7 @@ class EditPageController extends GetxController {
   ItemType? type;
   List<ArticleElement>? articleElements;
 
+  RxBool canCancel = true.obs;
   String? externalImage;
   RxBool validInput = false.obs;
 

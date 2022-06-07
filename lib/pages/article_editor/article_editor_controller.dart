@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 
 import '../../controllers/web_data.dart';
 import '../../pages/article_page/article_page_controller.dart';
+import '../../pages/edit_page/edit_page_controller.dart';
 
 import '../../models/article.dart';
 
@@ -25,7 +26,6 @@ class ArticleEditorController extends GetxController {
   String colorMode = "light";
   ArticleElementType? type;
 
-  String? originalData;
   String? externalImage;
   RxBool validInput = false.obs;
   int? index;
@@ -44,6 +44,7 @@ class ArticleEditorController extends GetxController {
       } else {
         dataController.text = item.data;
       }
+
       descriptionController.text = item.description ?? "";
       imageCopyrightController.text = item.imageCopyright ?? "";
       colorMode = (item.dark != null && item.dark!) ? "dark" : "light";
@@ -109,6 +110,7 @@ class ArticleEditorController extends GetxController {
 // ###################################################################################
 
   Future<void> updloadImage() async {
+    Get.find<EditPageController>().canCancel.value = false;
     await executeWithErrorHandling(null, () async {
       final selection = await FilePicker.platform.pickFiles(
         allowMultiple: false,
@@ -122,7 +124,7 @@ class ArticleEditorController extends GetxController {
       showWaitingDialog();
       final url =
           await Get.find<WebData>().uploadImage(filename, "$path", data!);
-      dataController.text = url;
+      imageUrlController.text = url;
     });
     if (Get.isDialogOpen == true) {
       Get.back();
@@ -131,6 +133,7 @@ class ArticleEditorController extends GetxController {
   }
 
   Future<void> deleteImage() async {
+    Get.find<EditPageController>().canCancel.value = false;
     await executeWithErrorHandling(null, () async {
       showWaitingDialog();
       await Get.find<WebData>().removeImage(dataController.text);
@@ -150,10 +153,10 @@ class ArticleEditorController extends GetxController {
     if (validInput.value) {
       final item = ArticleElement(
         data: type == ArticleElementType.IMAGE
-            ? imageUrlController.text.trim()
+            ? imageUrlController.text
             : dataController.text.trim(),
         description: type == ArticleElementType.IMAGE &&
-                imageCopyrightController.text.trim().isNotEmpty
+                imageCopyrightController.text.isNotEmpty
             ? descriptionController.text
             : null,
         type: type!,
@@ -175,7 +178,7 @@ class ArticleEditorController extends GetxController {
   Future<void> cancel() async {
     final input = await showConfirmDialog(ConfirmDialogMode.DISCARD);
     if (input) {
-      if (imageMode == "asset") {
+      if (imageMode == "asset" && imageUrlController.text.isNotEmpty) {
         await deleteImage();
       }
       Get.back();

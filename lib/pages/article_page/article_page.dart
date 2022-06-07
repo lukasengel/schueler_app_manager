@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../edit_page/edit_page_controller.dart';
+
 import './article_page_controller.dart';
 import './article_widgets.dart';
 
@@ -13,11 +15,13 @@ class ArticlePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: controller.cancel,
-          tooltip: "tooltips/back".tr,
-        ),
+        leading: Obx(() => IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: Get.find<EditPageController>().canCancel.value
+                  ? controller.cancel
+                  : null,
+              tooltip: "tooltips/back".tr,
+            )),
         centerTitle: false,
         title: Text("edit_page/compose_article".tr),
         actions: [
@@ -45,7 +49,7 @@ class ArticlePage extends StatelessWidget {
                   onEdit: () => controller.editItem(index),
                 );
               },
-              separatorBuilder: (_, __) => const SizedBox(height: 30),
+              separatorBuilder: (_, __) => const SizedBox(height: 10),
               itemCount: controller.articleElements.length,
             ),
           );
