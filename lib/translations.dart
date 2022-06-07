@@ -31,6 +31,7 @@ const translationKeys = {
     "tooltips/back": "Zurück",
     "tooltips/save": "Speichern",
     "tooltips/change_password": "Schülerpaßwort ändern",
+    "tooltips/help":"Hilfe",
     "dialogs/cancel": "Abbrechen",
     "dialogs/0/title": "Neuer Lehrer",
     "dialogs/0/title_edit": "Lehrer bearbeiten",

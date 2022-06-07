@@ -26,6 +26,11 @@ class ArticlePage extends StatelessWidget {
         title: Text("edit_page/compose_article".tr),
         actions: [
           IconButton(
+            onPressed: controller.help,
+            icon: const Icon(Icons.help),
+            tooltip: "tooltips/help".tr,
+          ),
+          IconButton(
             tooltip: "tooltips/save".tr,
             icon: const Icon(Icons.done),
             onPressed: controller.submit,
