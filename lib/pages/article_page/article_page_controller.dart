@@ -5,15 +5,16 @@ import '../../models/article.dart';
 import '../article_editor/article_editor.dart';
 
 class ArticlePageController extends GetxController {
-  late List<ArticleElement> articleElements;
+  late List<ArticleElement> articleElements = [];
   late String path;
 
   @override
   void onInit() {
     final Map args = Get.arguments;
     path = args["path"];
-    print(path);
-    articleElements = [...args["elements"]];
+    if (args["elements"] != null) {
+      articleElements = [...args["elements"]];
+    }
     super.onInit();
   }
 
