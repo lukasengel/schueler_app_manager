@@ -24,6 +24,7 @@ const translationKeys = {
     "error/write_protection":
         "Dieses Element ist schreibgeschützt. ~Der Entwickler :D",
     "error/no_selection": "Keine Auswahl",
+      "error/url_format": "Fehlerhaftes Format: URL muß mit 'http://' oder 'https://' beginnen.",
     "tooltips/toggle_visibility": "Paßwort ein-/ausblenden",
     "tooltips/refresh": "Aktualisieren",
     "tooltips/logout": "Abmelden",
@@ -31,6 +32,7 @@ const translationKeys = {
     "tooltips/back": "Zurück",
     "tooltips/save": "Speichern",
     "tooltips/change_password": "Schülerpaßwort ändern",
+    "tooltips/help":"Hilfe",
     "dialogs/cancel": "Abbrechen",
     "dialogs/0/title": "Neuer Lehrer",
     "dialogs/0/title_edit": "Lehrer bearbeiten",

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../widgets/confirm_dialog.dart';
@@ -49,6 +50,24 @@ class ArticlePageController extends GetxController {
     if (input) {
       Get.back();
     }
+  }
+
+  Future<void> help() async {
+    Get.dialog(Theme(
+      data: ThemeData(
+        brightness: Get.theme.brightness,
+        colorScheme: Get.theme.colorScheme,
+      ),
+      child: AlertDialog(
+        content: Image.asset("assets/images/elements.png"),
+        actions: [
+          TextButton(
+            onPressed: Get.back,
+            child: const Text("OK"),
+          )
+        ],
+      ),
+    ));
   }
 
   void submit() {
