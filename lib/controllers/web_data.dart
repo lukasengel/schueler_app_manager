@@ -38,10 +38,7 @@ class WebData extends GetxController {
         });
       }
     }
-    list.sort((a, b) {
-      return b.datetime.millisecondsSinceEpoch
-          .compareTo(a.datetime.millisecondsSinceEpoch);
-    });
+    list.sort((a, b) => b.datetime.compareTo(a.datetime));
     return list;
   }
 
@@ -59,10 +56,7 @@ class WebData extends GetxController {
         }
       }
     }
-    list.sort((a, b) {
-      return a.abbreviation.compareTo(b.abbreviation);
-    });
-
+    list.sort((a, b) => a.abbreviation.compareTo(b.abbreviation));
     return list;
   }
 
@@ -79,10 +73,7 @@ class WebData extends GetxController {
         });
       }
     }
-    list.sort((a, b) {
-      return b.datetime.millisecondsSinceEpoch
-          .compareTo(a.datetime.millisecondsSinceEpoch);
-    });
+    list.sort((a, b) => a.datetime.compareTo(b.datetime));
     return list;
   }
 
@@ -95,10 +86,7 @@ class WebData extends GetxController {
         FirebaseDatabase.instance.ref("schoolLife/${item.identifier}");
     await database.set(item.toJson());
     schoolLifeItems.add(item);
-    schoolLifeItems.sort((a, b) {
-      return b.datetime.millisecondsSinceEpoch
-          .compareTo(a.datetime.millisecondsSinceEpoch);
-    });
+    schoolLifeItems.sort((a, b) => b.datetime.compareTo(a.datetime));
   }
 
   Future<void> addTeacher(Teacher teacher) async {
@@ -111,9 +99,7 @@ class WebData extends GetxController {
     }
     await database.set(teacher.name);
     teachers.add(teacher);
-    teachers.sort((a, b) {
-      return a.abbreviation.compareTo(b.abbreviation);
-    });
+    teachers.sort((a, b) => a.abbreviation.compareTo(b.abbreviation));
   }
 
   Future<void> sendBroadcast(String header, String content) async {
@@ -126,6 +112,7 @@ class WebData extends GetxController {
       "datetime": broadcast.datetime.toIso8601String(),
     });
     broadcasts.add(broadcast);
+    broadcasts.sort((a, b) => a.datetime.compareTo(b.datetime));
   }
 
   Future<void> changePassword(String newPassword) async {
@@ -171,6 +158,7 @@ class WebData extends GetxController {
     final database = FirebaseDatabase.instance.ref("broadcast/$identifier");
     await database.remove();
     broadcasts.removeWhere((element) => element.identifier == identifier);
+    broadcasts.sort((a, b) => a.datetime.compareTo(b.datetime));
   }
 
   void clear() {
