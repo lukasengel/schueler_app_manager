@@ -1,38 +1,27 @@
 import 'package:flutter/material.dart';
 
-import 'package:get/get.dart';
+import 'package:schueler_app_manager/common/common.dart';
 
-enum ConfirmDialogMode { DISCARD, DELETE }
+Future<bool> showConfirmDialog({required BuildContext context, required String title, required String content}) async {
+  final input = await showDialog<bool?>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              onPressed: Navigator.of(context).pop,
+              child: Text(AppLocalizations.of(context).translate("cancel")),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(AppLocalizations.of(context).translate("confirm")),
+            ),
+          ],
+        );
+      });
 
-ThemeData get _getTheme {
-  return ThemeData(
-    brightness: Get.theme.brightness,
-    colorScheme: Get.theme.colorScheme,
-  );
-}
-
-Future<bool> showConfirmDialog(ConfirmDialogMode mode) async {
-  final index = mode.index;
-  final input = await Get.dialog(
-    Theme(
-      data: _getTheme,
-      child: AlertDialog(
-        title: Text("dialog/${index}/confirm_header".tr,
-            style: const TextStyle(fontSize: 18)),
-        content: Text("dialog/${index}/confirm_message".tr),
-        buttonPadding: const EdgeInsets.all(20),
-        actions: <Widget>[
-          TextButton(
-            child: Text("dialog/cancel".tr.tr.toUpperCase()),
-            onPressed: Get.back,
-          ),
-          TextButton(
-            child: Text("dialog/${index}/confirm_action".tr.toUpperCase()),
-            onPressed: () => Get.back(result: true),
-          ),
-        ],
-      ),
-    ),
-  );
   return input ?? false;
 }

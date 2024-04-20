@@ -1,117 +1,151 @@
-import './article.dart';
+import 'package:schueler_app_manager/models/models.dart';
 
-enum ItemType {
+enum SchoolLifeItemType {
   EVENT,
   ARTICLE,
   ANNOUNCEMENT;
 
-  factory ItemType.fromString(String data) {
-    switch (data) {
-      case "event":
-        return ItemType.EVENT;
-      case "article":
-        return ItemType.ARTICLE;
-      default:
-        return ItemType.ANNOUNCEMENT;
-    }
+  factory SchoolLifeItemType.fromString(String data) {
+    return SchoolLifeItemType.values.byName(data.toUpperCase());
   }
 
-  String toJson() {
-    switch (this) {
-      case ItemType.EVENT:
-        return "event";
-      case ItemType.ARTICLE:
-        return "article";
-      default:
-        return "announcement";
-    }
+  @override
+  String toString() {
+    return name.toLowerCase();
   }
 }
 
 class SchoolLifeItem {
-  String identifier;
-  String header;
-  String content;
-  ItemType type;
-  DateTime datetime;
-  String? hyperlink;
-  String? imageUrl;
-  String? imageCopyright;
-  bool? externalImage;
-  DateTime? eventTime;
-  bool? dark;
-  List<ArticleElement> articleElements;
+  final String identifier;
+  final DateTime datetime;
+  final String header;
+  final String content;
+  final String? hyperlink;
+  final List<ArticleElement>? articleElements;
 
-  SchoolLifeItem({
+  const SchoolLifeItem({
     required this.identifier,
+    required this.datetime,
     required this.header,
     required this.content,
-    required this.type,
-    required this.datetime,
     this.hyperlink,
-    this.imageUrl,
-    this.imageCopyright,
-    this.externalImage,
-    this.eventTime,
-    this.dark,
-    this.articleElements = const [],
+    this.articleElements,
   });
 
-  factory SchoolLifeItem.fromJson(Map<String, dynamic> json, String id) {
-    String getString(String key) {
-      return json.containsKey(key) ? json[key] as String : "";
-    }
+  factory SchoolLifeItem.fromMapEntry(MapEntry<String, dynamic> data) {
+    List<ArticleElement>? articleElements;
 
-    String? tryGetString(String key) {
-      return json.containsKey(key) ? json[key] as String : null;
-    }
+    if (data.value.containsKey("articleElements")) {
+      final elements = data.value["articleElements"];
 
-    List<ArticleElement>? articleElements = [];
-
-    if (json.containsKey("articleElements")) {
-      final elements = json["articleElements"];
       if (elements is List) {
-        elements.forEach((value) {
-          articleElements.add(ArticleElement.fromJson(
-            Map<String, dynamic>.from(value),
-          ));
-        });
+        articleElements = elements.map((value) {
+          return ArticleElement.fromMap(Map<String, dynamic>.from(value));
+        }).toList();
       }
     }
 
-    return SchoolLifeItem(
-      identifier: id,
-      header: getString("header"),
-      content: getString("content"),
-      type: ItemType.fromString(getString("type")),
-      datetime: DateTime.tryParse(getString("datetime")) ?? DateTime.now(),
-      hyperlink: tryGetString("hyperlink"),
-      imageUrl: tryGetString("imageUrl"),
-      imageCopyright: tryGetString("imageCopyright"),
-      externalImage: json.containsKey("externalImage")
-          ? json["externalImage"] as bool
-          : null,
-      eventTime: DateTime.tryParse(tryGetString("eventTime") ?? ""),
-      dark: json.containsKey("dark") ? json["dark"] as bool : null,
-      articleElements: articleElements,
-    );
+    final SchoolLifeItemType type = SchoolLifeItemType.fromString(data.value["type"]);
+
+    switch (type) {
+      case SchoolLifeItemType.EVENT:
+        return EventSchoolLifeItem(
+          identifier: data.key,
+          datetime: DateTime.parse(data.value["datetime"]),
+          header: data.value["header"],
+          content: data.value["content"],
+          hyperlink: data.value["hyperlink"],
+          articleElements: articleElements,
+          eventTime: DateTime.parse(data.value["eventTime"]),
+        );
+      case SchoolLifeItemType.ARTICLE:
+        return ArticleSchoolLifeItem(
+          identifier: data.key,
+          datetime: DateTime.parse(data.value["datetime"]),
+          header: data.value["header"],
+          content: data.value["content"],
+          hyperlink: data.value["hyperlink"],
+          articleElements: articleElements,
+          externalImage: data.value["externalImage"],
+          imageUrl: data.value["imageUrl"],
+          imageCopyright: data.value["imageCopyright"],
+          dark: data.value["dark"],
+        );
+      case SchoolLifeItemType.ANNOUNCEMENT:
+        return SchoolLifeItem(
+          identifier: data.key,
+          datetime: DateTime.parse(data.value["datetime"]),
+          header: data.value["header"],
+          content: data.value["content"],
+          hyperlink: data.value["hyperlink"],
+          articleElements: articleElements,
+        );
+    }
   }
 
-  Map<String, dynamic> toJson() {
-    return {
+  MapEntry<String, dynamic> toMapEntry() {
+    return MapEntry(identifier, {
+      "datetime": datetime.toIso8601String(),
       "header": header,
       "content": content,
-      "type": type.toJson(),
-      "datetime": datetime.toIso8601String(),
       "hyperlink": hyperlink,
-      "imageUrl": imageUrl,
-      "imageCopyright": imageCopyright,
-      "externalImage": externalImage,
-      "eventTime": eventTime?.toIso8601String(),
-      "dark": dark,
-      "articleElements": articleElements.isNotEmpty
-          ? articleElements.map((e) => e.toJson()).toList()
-          : null,
-    };
+      "articleElements": articleElements?.map((e) => e.toMap()).toList(),
+      "type": SchoolLifeItemType.ANNOUNCEMENT.toString(),
+    });
+  }
+}
+
+class EventSchoolLifeItem extends SchoolLifeItem {
+  final DateTime eventTime;
+
+  const EventSchoolLifeItem({
+    required super.identifier,
+    required super.datetime,
+    required super.header,
+    required super.content,
+    super.hyperlink,
+    super.articleElements,
+    required this.eventTime,
+  });
+
+  @override
+  MapEntry<String, dynamic> toMapEntry() {
+    return super.toMapEntry()
+      ..value.addAll({
+        "eventTime": eventTime.toIso8601String(),
+        "type": SchoolLifeItemType.EVENT.toString(),
+      });
+  }
+}
+
+class ArticleSchoolLifeItem extends SchoolLifeItem {
+  final bool externalImage;
+  final String imageUrl;
+  final String? imageCopyright;
+  final bool dark;
+
+  const ArticleSchoolLifeItem({
+    required super.identifier,
+    required super.datetime,
+    required super.header,
+    required super.content,
+    super.hyperlink,
+    super.articleElements,
+    required this.externalImage,
+    required this.imageUrl,
+    this.imageCopyright,
+    required this.dark,
+  });
+
+  @override
+  MapEntry<String, dynamic> toMapEntry() {
+    return super.toMapEntry()
+      ..value.addAll({
+        "externalImage": externalImage,
+        "imageUrl": imageUrl,
+        "imageCopyright": imageCopyright,
+        "dark": dark,
+        "type": SchoolLifeItemType.ARTICLE.toString(),
+      });
   }
 }

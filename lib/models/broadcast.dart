@@ -1,20 +1,30 @@
 class Broadcast {
-  final int identifier;
+  final String identifier;
   final String header;
   final String content;
   final DateTime datetime;
-  const Broadcast(this.header, this.content, this.datetime, this.identifier);
 
-  factory Broadcast.fromJson(Map<String, dynamic> json, int identifier) {
-    String getString(String key) {
-      return json.containsKey(key) ? json[key] as String : "";
-    }
+  const Broadcast({
+    required this.identifier,
+    required this.header,
+    required this.content,
+    required this.datetime,
+  });
 
+  factory Broadcast.fromMapEntry(MapEntry<String, dynamic> entry) {
     return Broadcast(
-      getString("header"),
-      getString("content"),
-      DateTime.tryParse(getString("datetime")) ?? DateTime.now(),
-      identifier,
+      identifier: entry.key,
+      header: entry.value["header"],
+      content: entry.value["content"],
+      datetime: DateTime.parse(entry.value["datetime"]),
     );
+  }
+
+  MapEntry<String, dynamic> toMapEntry() {
+    return MapEntry(identifier, {
+      "header": header,
+      "content": content,
+      "datetime": datetime.toIso8601String(),
+    });
   }
 }

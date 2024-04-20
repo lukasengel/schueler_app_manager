@@ -8,14 +8,17 @@
 .buildlog/
 .history
 .svn/
-*.lock
-.metadata
+migrate_working_dir/
 
 # IntelliJ related
 *.iml
 *.ipr
 *.iws
 .idea/
+
+# Firebase
+*/firebase_options.dart
+.firebase
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -28,14 +31,9 @@
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.packages
-.firebase
 .pub-cache/
 .pub/
 /build/
-
-# Web related
-lib/firebase_options.dart
 
 # Symbolication related
 app.*.symbols

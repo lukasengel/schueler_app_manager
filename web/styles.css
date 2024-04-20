@@ -1,21 +1,36 @@
-.center {
-    margin: 0;
+/* Loading Indicator */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 4px solid #ffffff;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
     position: absolute;
     top: 50%;
-    height: 30%;
     left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
 }
 
-body {
-    color: #212121;
-    background: #fff;
+/* Animation */
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
-  
+
+/* Light Mode */
+body {
+    background: rgb(67, 85, 185);
+}
+
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
     body {
-      color: #eee;
-      background: #212121;
+        background: rgb(27, 27, 31);
     }
 }
