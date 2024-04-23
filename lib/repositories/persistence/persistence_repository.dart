@@ -59,6 +59,11 @@ abstract class PersistenceRepository {
   /// Throws [PersistenceException] upon failure.
   Future<List<UserProfile>> loadUserProfiles();
 
+  /// Load all flags indicating whether a function is enabled.
+  ///
+  /// Throws [PersistenceException] upon failure.
+  Future<Map<String, bool>> loadFunctionFlags();
+
   /// Add a school life item.
   ///
   /// Throws [PersistenceException] upon failure.
@@ -83,6 +88,11 @@ abstract class PersistenceRepository {
   ///
   /// Throws [PersistenceException] upon failure.
   Future<void> updateUserProfile(UserProfile user);
+
+  /// Update a function flag.
+  ///
+  /// Throws [PersistenceException] upon failure.
+  Future<void> updateFunctionFlag(String functionName, bool enabled);
 
   /// Delete a school life item by its identifier.
   ///

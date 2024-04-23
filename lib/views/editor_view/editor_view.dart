@@ -519,7 +519,7 @@ class _EditorViewState extends ConsumerState<EditorView> {
                                           width: 40,
                                           padding: const EdgeInsets.all(5),
                                           child: LoadingIndicator(
-                                            indicatorType: Indicator.ballPulseSync,
+                                            indicatorType: Indicator.ballSpinFadeLoader,
                                             colors: [Theme.of(context).colorScheme.primary],
                                           ),
                                         )

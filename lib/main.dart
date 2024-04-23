@@ -9,9 +9,8 @@ import 'package:schueler_app_manager/views/views.dart';
 
 import 'init.dart';
 
-// TODO: Testing
 // TODO: Cleanup (Code and Lang files)
-// TODO: Language
+// TODO: Disable English Language
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

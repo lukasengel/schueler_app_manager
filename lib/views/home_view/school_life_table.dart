@@ -8,20 +8,17 @@ class SchoolLifeTable extends StatelessWidget {
   final List<SchoolLifeItem> schoolLifeItems;
   final Function(SchoolLifeItem) onEdit;
   final Function(SchoolLifeItem) onDelete;
-  final ScrollPhysics physics;
 
   const SchoolLifeTable({
     required this.schoolLifeItems,
     required this.onEdit,
     required this.onDelete,
-    required this.physics,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      physics: physics,
       itemCount: schoolLifeItems.length,
       separatorBuilder: (context, index) => const Divider(height: 0),
       itemBuilder: (context, index) {

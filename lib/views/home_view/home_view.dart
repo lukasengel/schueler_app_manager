@@ -1,9 +1,7 @@
-import 'package:easy_refresh/easy_refresh.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 import 'package:schueler_app_manager/common/common.dart';
 import 'package:schueler_app_manager/models/models.dart';
@@ -30,18 +28,16 @@ class HomeView extends ConsumerStatefulWidget {
 }
 
 class _HomeViewState extends ConsumerState<HomeView> {
-  final _controller = EasyRefreshController(
-    controlFinishRefresh: true,
-    controlFinishLoad: true,
-  );
   var _selectedPage = 0;
   var _unlocked = false;
   var _loading = false;
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onRefresh();
+    });
+    super.initState();
   }
 
   Future<void> _onRefresh() async {
@@ -50,14 +46,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
     });
 
     await executeWithErrorSnackbar(context, function: () async {
-      await ref.read(persistenceProvider).loadStandardData();
-
-      if (widget.admin) {
-        await ref.read(persistenceProvider).loadAdminData();
-      }
+      await ref.read(persistenceProvider).loadData(widget.admin);
     });
-
-    _controller.finishRefresh();
 
     setState(() {
       _loading = false;
@@ -106,7 +96,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
     // Reaload even if the dialog was closed without saving
     // Images might have been added or removed
-    _controller.callRefresh();
+    _onRefresh();
   }
 
   Future<void> _onDeleteSchoolLifeItem(SchoolLifeItem schoolLifeItem) async {
@@ -125,7 +115,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         await ref.read(persistenceProvider).deleteSchoolLifeItem(schoolLifeItem);
       });
 
-      _controller.callRefresh();
+      _onRefresh();
     }
   }
 
@@ -156,7 +146,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         await ref.read(persistenceProvider).addTeacher(input);
       });
 
-      _controller.callRefresh();
+      _onRefresh();
     }
   }
 
@@ -176,7 +166,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         await ref.read(persistenceProvider).deleteTeacher(teacher);
       });
 
-      _controller.callRefresh(force: true);
+      _onRefresh();
     }
   }
 
@@ -192,7 +182,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         await ref.read(persistenceProvider).addBroadcast(input);
       });
 
-      _controller.callRefresh();
+      _onRefresh();
     }
   }
 
@@ -208,7 +198,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         await ref.read(persistenceProvider).deleteBroadcast(broadcast);
       });
 
-      _controller.callRefresh();
+      _onRefresh();
     }
   }
 
@@ -224,7 +214,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         await ref.read(persistenceProvider).deleteFeedback(feedback);
       });
 
-      _controller.callRefresh();
+      _onRefresh();
     }
   }
 
@@ -233,7 +223,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       await ref.read(persistenceProvider).updateCredentials(credentials);
     });
 
-    _controller.callRefresh();
+    _onRefresh();
   }
 
   Future<void> _onMarkUserForPasswordReset(UserProfile userProfile) async {
@@ -248,8 +238,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
         await ref.read(persistenceProvider).markUserForPasswordReset(userProfile);
       });
 
-      _controller.callRefresh();
+      _onRefresh();
     }
+  }
+
+  Future<void> _onChangeFunctionFlag(String functionName, bool enabled) async {
+    await executeWithErrorSnackbar(context, function: () async {
+      await ref.read(persistenceProvider).updateFunctionFlag(functionName, enabled);
+    });
+
+    _onRefresh();
   }
 
   Future<void> _onDeleteImage((String, String) image) async {
@@ -264,19 +262,36 @@ class _HomeViewState extends ConsumerState<HomeView> {
         await ref.read(persistenceProvider).deleteImage(image);
       });
 
-      _controller.callRefresh();
+      _onRefresh();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    AppLogger.instance.d("Building HomeView");
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Schüler-App Manager"),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Schüler-App Manager"),
+            if (_loading)
+              Container(
+                margin: const EdgeInsets.only(left: 10),
+                height: 35,
+                width: 35,
+                child: LoadingIndicator(
+                  indicatorType: Indicator.ballSpinFadeLoader,
+                  colors: [Theme.of(context).colorScheme.primary],
+                ),
+              ),
+          ],
+        ),
         actions: [
           Text(ref.read(authenticationProvider).currentDisplayName ?? ""),
           IconButton(
-            onPressed: _controller.callRefresh,
+            onPressed: _onRefresh,
             icon: const Icon(Icons.refresh),
             tooltip: AppLocalizations.of(context).translate("refresh"),
           ),
@@ -384,48 +399,39 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   topLeft: Radius.circular(5),
                 ),
               ),
-              child: EasyRefresh.builder(
-                controller: _controller,
-                onRefresh: _onRefresh,
-                refreshOnStart: true,
-                header: const MaterialHeader(),
-                scrollBehaviorBuilder: (physics) => const MaterialScrollBehavior(),
-                childBuilder: (context, physics) {
-                  return IgnorePointer(
-                    ignoring: _loading,
-                    child: [
-                      SchoolLifeTable(
-                        schoolLifeItems: ref.watch(persistenceProvider.select((value) => value.schoolLifeItems)),
-                        onEdit: _onNewOrEditSchoolLifeItem,
-                        onDelete: _onDeleteSchoolLifeItem,
-                        physics: physics,
-                      ),
-                      TeacherTable(
-                        teachers: ref.watch(persistenceProvider.select((value) => value.teachers)),
-                        onEdit: _onNewOrEditTeacher,
-                        onDelete: _onDeleteTeacher,
-                      ),
-                      BroadcastTable(
-                        broadcasts: ref.watch(persistenceProvider.select((value) => value.broadcasts)),
-                        onDelete: _onDeleteBroadcast,
-                      ),
-                      FeedbackTable(
-                        feedbacks: ref.watch(persistenceProvider.select((value) => value.feedbacks)),
-                        onDelete: _onDeleteFeedback,
-                      ),
-                      AdministrationTable(
-                        key: ValueKey(ref.watch(persistenceProvider.select((value) => value.credentials.hashCode))),
-                        credentials: ref.watch(persistenceProvider.select((value) => value.credentials)),
-                        userProfiles: ref.watch(persistenceProvider.select((value) => value.userProfiles)),
-                        allImages: ref.watch(persistenceProvider.select((value) => value.allImages)),
-                        referencedImages: ref.watch(persistenceProvider.select((value) => value.referencedImages)),
-                        onUpdateCredentials: _onUpdateCredentials,
-                        onResetPassword: _onMarkUserForPasswordReset,
-                        onDeleteImage: _onDeleteImage,
-                      ),
-                    ][_selectedPage],
-                  );
-                },
+              child: IgnorePointer(
+                ignoring: _loading,
+                child: [
+                  SchoolLifeTable(
+                    schoolLifeItems: ref.watch(persistenceProvider.select((value) => value.schoolLifeItems)),
+                    onEdit: _onNewOrEditSchoolLifeItem,
+                    onDelete: _onDeleteSchoolLifeItem,
+                  ),
+                  TeacherTable(
+                    teachers: ref.watch(persistenceProvider.select((value) => value.teachers)),
+                    onEdit: _onNewOrEditTeacher,
+                    onDelete: _onDeleteTeacher,
+                  ),
+                  BroadcastTable(
+                    broadcasts: ref.watch(persistenceProvider.select((value) => value.broadcasts)),
+                    onDelete: _onDeleteBroadcast,
+                  ),
+                  FeedbackTable(
+                    feedbacks: ref.watch(persistenceProvider.select((value) => value.feedbacks)),
+                    onDelete: _onDeleteFeedback,
+                  ),
+                  AdministrationTable(
+                    credentials: ref.watch(persistenceProvider.select((value) => value.credentials)),
+                    userProfiles: ref.watch(persistenceProvider.select((value) => value.userProfiles)),
+                    allImages: ref.watch(persistenceProvider.select((value) => value.allImages)),
+                    referencedImages: ref.watch(persistenceProvider.select((value) => value.referencedImages)),
+                    functionFlags: ref.watch(persistenceProvider.select((value) => value.functionFlags)),
+                    onUpdateCredentials: _onUpdateCredentials,
+                    onResetPassword: _onMarkUserForPasswordReset,
+                    onDeleteImage: _onDeleteImage,
+                    onToggleFunctionFlag: _onChangeFunctionFlag,
+                  ),
+                ][_selectedPage],
               ),
             ),
           ),

@@ -355,7 +355,7 @@ class _ImageArticleElementDialogState extends ConsumerState<ImageArticleElementD
                             width: 40,
                             padding: const EdgeInsets.all(5),
                             child: LoadingIndicator(
-                              indicatorType: Indicator.ballPulseSync,
+                              indicatorType: Indicator.ballSpinFadeLoader,
                               colors: [Theme.of(context).colorScheme.primary],
                             ),
                           )

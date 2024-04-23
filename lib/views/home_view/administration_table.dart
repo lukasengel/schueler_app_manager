@@ -3,135 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:schueler_app_manager/common/common.dart';
 import 'package:schueler_app_manager/models/models.dart';
 
-class AdministrationTable extends StatefulWidget {
+class AdministrationTable extends StatelessWidget {
   final Credentials? credentials;
   final List<(String, String)> allImages;
   final List<UserProfile> userProfiles;
   final List<String> referencedImages;
+  final Map<String, bool> functionFlags;
   final Function(Credentials) onUpdateCredentials;
   final Function(UserProfile) onResetPassword;
   final Function((String, String)) onDeleteImage;
+  final Function(String, bool) onToggleFunctionFlag;
 
   const AdministrationTable({
     required this.credentials,
     required this.userProfiles,
     required this.allImages,
     required this.referencedImages,
+    required this.functionFlags,
     required this.onUpdateCredentials,
     required this.onResetPassword,
     required this.onDeleteImage,
+    required this.onToggleFunctionFlag,
     super.key,
   });
-
-  @override
-  State<AdministrationTable> createState() => _AdministrationTableState();
-}
-
-class _AdministrationTableState extends State<AdministrationTable> {
-  var _changed = false;
-  var _hidePassword = true;
-  final _urlController = TextEditingController();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    _urlController.text = widget.credentials?.url ?? "";
-    _usernameController.text = widget.credentials?.username ?? "";
-    _passwordController.text = widget.credentials?.password ?? "";
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _urlController.dispose();
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _toggleHidePassword() {
-    setState(() {
-      _hidePassword = !_hidePassword;
-    });
-  }
-
-  void _onSave() {
-    widget.onUpdateCredentials(
-      Credentials(
-        url: _urlController.text.trim(),
-        username: _usernameController.text.trim(),
-        password: _passwordController.text.trim(),
-      ),
-    );
-  }
-
-  void _onChanged() {
-    setState(() {
-      _changed = _urlController.text != widget.credentials?.url ||
-          _usernameController.text != widget.credentials?.username ||
-          _passwordController.text != widget.credentials?.password;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        FocusTraversalGroup(
-          child: ExpansionTile(
-            key: ValueKey(widget.credentials.hashCode),
-            title: Text(AppLocalizations.of(context).translate("credentials")),
-            initiallyExpanded: true,
-            expandedCrossAxisAlignment: CrossAxisAlignment.end,
-            expandedAlignment: Alignment.topCenter,
-            collapsedShape: const Border(),
-            shape: const Border(),
-            childrenPadding: const EdgeInsets.all(10),
-            children: [
-              TextField(
-                controller: _urlController,
-                textInputAction: TextInputAction.next,
-                onChanged: (_) => _onChanged(),
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).translate("url"),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _usernameController,
-                textInputAction: TextInputAction.next,
-                onChanged: (_) => _onChanged(),
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).translate("username"),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _passwordController,
-                textInputAction: TextInputAction.next,
-                onChanged: (_) => _onChanged(),
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).translate("password"),
-                  suffixIcon: IconButton(
-                    icon: Icon(_hidePassword ? Icons.visibility : Icons.visibility_off),
-                    onPressed: _toggleHidePassword,
-                    focusNode: FocusNode(skipTraversal: true),
-                  ),
-                ),
-                obscureText: _hidePassword,
-              ),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: _changed ? _onSave : null,
-                child: Text(AppLocalizations.of(context).translate("save")),
-              ),
-            ],
-          ),
+        CredentialsTile(
+          credentials: credentials,
+          onUpdateCredentials: onUpdateCredentials,
         ),
         const Divider(height: 0),
         ExpansionTile(
-          key: ValueKey(widget.userProfiles.hashCode),
           title: Text(AppLocalizations.of(context).translate("userManagement")),
           initiallyExpanded: true,
           expandedAlignment: Alignment.topLeft,
@@ -140,15 +45,14 @@ class _AdministrationTableState extends State<AdministrationTable> {
           shape: const Border(),
           childrenPadding: const EdgeInsets.only(bottom: 5),
           maintainState: true,
-          children: List.generate(widget.userProfiles.length, (index) {
-            final userProfile = widget.userProfiles[index];
+          children: List.generate(userProfiles.length, (index) {
+            final userProfile = userProfiles[index];
 
             return ListTile(
-              key: ValueKey(userProfile.uid),
               title: Text(userProfile.displayName),
               subtitle: Text(userProfile.uid),
               trailing: TextButton(
-                onPressed: !userProfile.passwordResetNeeded ? () => widget.onResetPassword(userProfile) : null,
+                onPressed: !userProfile.passwordResetNeeded ? () => onResetPassword(userProfile) : null,
                 child: Text(AppLocalizations.of(context).translate("resetPassword")),
               ),
             );
@@ -156,7 +60,28 @@ class _AdministrationTableState extends State<AdministrationTable> {
         ),
         const Divider(height: 0),
         ExpansionTile(
-          key: ValueKey(widget.allImages.hashCode),
+          title: Text(AppLocalizations.of(context).translate("cloudFunctions")),
+          initiallyExpanded: true,
+          expandedAlignment: Alignment.topLeft,
+          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+          collapsedShape: const Border(),
+          shape: const Border(),
+          childrenPadding: const EdgeInsets.only(bottom: 5),
+          maintainState: true,
+          children: List.generate(functionFlags.entries.length, (index) {
+            final entry = functionFlags.entries.elementAt(index);
+
+            return ListTile(
+              title: Text(entry.key),
+              trailing: Switch(
+                onChanged: (value) => onToggleFunctionFlag(entry.key, value),
+                value: entry.value,
+              ),
+            );
+          }),
+        ),
+        const Divider(height: 0),
+        ExpansionTile(
           title: Text(AppLocalizations.of(context).translate("imageManagement")),
           initiallyExpanded: true,
           expandedCrossAxisAlignment: CrossAxisAlignment.end,
@@ -170,9 +95,9 @@ class _AdministrationTableState extends State<AdministrationTable> {
               crossAxisAlignment: WrapCrossAlignment.end,
               spacing: 10,
               runSpacing: 10,
-              children: List.generate(widget.allImages.length, (index) {
-                final image = widget.allImages[index];
-                final isReferenced = widget.referencedImages.contains(image.$1);
+              children: List.generate(allImages.length, (index) {
+                final image = allImages[index];
+                final isReferenced = referencedImages.contains(image.$1);
 
                 return Container(
                   height: 200,
@@ -221,7 +146,7 @@ class _AdministrationTableState extends State<AdministrationTable> {
                           padding: const EdgeInsets.all(5.0),
                           child: IconButton(
                             icon: const Icon(Icons.remove_circle_outline),
-                            onPressed: !isReferenced ? () => widget.onDeleteImage(image) : null,
+                            onPressed: !isReferenced ? () => onDeleteImage(image) : null,
                             tooltip: AppLocalizations.of(context).translate(isReferenced ? "inUse" : "delete"),
                             style: IconButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.6),
@@ -239,6 +164,133 @@ class _AdministrationTableState extends State<AdministrationTable> {
           ],
         ),
       ],
+    );
+  }
+}
+
+class CredentialsTile extends StatefulWidget {
+  final Credentials? credentials;
+  final Function(Credentials) onUpdateCredentials;
+
+  const CredentialsTile({
+    required this.credentials,
+    required this.onUpdateCredentials,
+    super.key,
+  });
+
+  @override
+  State<CredentialsTile> createState() => _CredentialsTileState();
+}
+
+class _CredentialsTileState extends State<CredentialsTile> {
+  var _changed = false;
+  var _hidePassword = true;
+  final _urlController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    _loadCredentials();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant CredentialsTile oldWidget) {
+    _loadCredentials();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _urlController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _loadCredentials() {
+    _urlController.text = widget.credentials?.url ?? "";
+    _usernameController.text = widget.credentials?.username ?? "";
+    _passwordController.text = widget.credentials?.password ?? "";
+    _onChanged();
+  }
+
+  void _toggleHidePassword() {
+    setState(() {
+      _hidePassword = !_hidePassword;
+    });
+  }
+
+  void _onSave() {
+    widget.onUpdateCredentials(
+      Credentials(
+        url: _urlController.text.trim(),
+        username: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+      ),
+    );
+  }
+
+  void _onChanged() {
+    setState(() {
+      _changed = _urlController.text != widget.credentials?.url ||
+          _usernameController.text != widget.credentials?.username ||
+          _passwordController.text != widget.credentials?.password;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FocusTraversalGroup(
+      child: ExpansionTile(
+        title: Text(AppLocalizations.of(context).translate("credentials")),
+        initiallyExpanded: true,
+        expandedCrossAxisAlignment: CrossAxisAlignment.end,
+        expandedAlignment: Alignment.topCenter,
+        collapsedShape: const Border(),
+        shape: const Border(),
+        childrenPadding: const EdgeInsets.all(10),
+        children: [
+          TextField(
+            controller: _urlController,
+            textInputAction: TextInputAction.next,
+            onChanged: (_) => _onChanged(),
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context).translate("url"),
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _usernameController,
+            textInputAction: TextInputAction.next,
+            onChanged: (_) => _onChanged(),
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context).translate("username"),
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _passwordController,
+            textInputAction: TextInputAction.next,
+            onChanged: (_) => _onChanged(),
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context).translate("password"),
+              suffixIcon: IconButton(
+                icon: Icon(_hidePassword ? Icons.visibility : Icons.visibility_off),
+                onPressed: _toggleHidePassword,
+                focusNode: FocusNode(skipTraversal: true),
+              ),
+            ),
+            obscureText: _hidePassword,
+          ),
+          const SizedBox(height: 10),
+          TextButton(
+            onPressed: _changed ? _onSave : null,
+            child: Text(AppLocalizations.of(context).translate("save")),
+          ),
+        ],
+      ),
     );
   }
 }

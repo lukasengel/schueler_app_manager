@@ -215,6 +215,24 @@ class FirebasePersistenceRepository extends PersistenceRepository {
   }
 
   @override
+  Future<Map<String, bool>> loadFunctionFlags() async {
+    try {
+      final snapshot = await FirebaseDatabase.instance.ref("functions").get();
+      final content = snapshot.value;
+
+      if (content != null && content is Map) {
+        content.removeWhere((key, value) => key == "latestState");
+        return Map<String, bool>.from(content);
+      }
+
+      throw "No function flags found in database";
+    } catch (e) {
+      AppLogger.instance.e("Error loading function flags: $e");
+      throw PersistenceException("Error loading function flags", e);
+    }
+  }
+
+  @override
   Future<void> addSchoolLifeItem(SchoolLifeItem item) async {
     try {
       final entry = item.toMapEntry();
@@ -270,6 +288,17 @@ class FirebasePersistenceRepository extends PersistenceRepository {
     } catch (e) {
       AppLogger.instance.e("Error updating user profile ${user.uid}: $e");
       throw PersistenceException("Error updating user profile ${user.uid}", e);
+    }
+  }
+
+  @override
+  Future<void> updateFunctionFlag(String functionName, bool enabled) async {
+    try {
+      final ref = FirebaseDatabase.instance.ref("functions/$functionName");
+      await ref.set(enabled);
+    } catch (e) {
+      AppLogger.instance.e("Error updating flag for function $functionName: $e");
+      throw PersistenceException("Error updating flag for function $functionName", e);
     }
   }
 

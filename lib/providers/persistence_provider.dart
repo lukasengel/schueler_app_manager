@@ -22,6 +22,7 @@ class PersistenceProvider extends ChangeNotifier {
   List<(String, String)> _allImages = [];
   List<String> _referencedImages = [];
   List<UserProfile> _userProfiles = [];
+  Map<String, bool> _functionFlags = {};
 
   List<SchoolLifeItem> get schoolLifeItems => [..._schoolLifeItems];
   List<Teacher> get teachers => [..._teachers];
@@ -31,20 +32,22 @@ class PersistenceProvider extends ChangeNotifier {
   List<(String, String)> get allImages => [..._allImages];
   List<String> get referencedImages => [..._referencedImages];
   List<UserProfile> get userProfiles => [..._userProfiles];
+  Map<String, bool> get functionFlags => {..._functionFlags};
 
-  Future<void> loadStandardData() async {
+  Future<void> loadData(bool admin) async {
     _teachers = await PersistenceRepository.instance.loadTeachers();
     _schoolLifeItems = await PersistenceRepository.instance.loadSchoolLifeItems();
     _broadcasts = await PersistenceRepository.instance.loadBroadcasts();
-    notifyListeners();
-  }
 
-  Future<void> loadAdminData() async {
-    _feedbacks = await PersistenceRepository.instance.loadFeedback();
-    _credentials = await PersistenceRepository.instance.loadCredentials();
-    _allImages = await PersistenceRepository.instance.loadImages();
-    _referencedImages = _loadReferencedImages();
-    _userProfiles = await PersistenceRepository.instance.loadUserProfiles();
+    if (admin) {
+      _feedbacks = await PersistenceRepository.instance.loadFeedback();
+      _credentials = await PersistenceRepository.instance.loadCredentials();
+      _allImages = await PersistenceRepository.instance.loadImages();
+      _referencedImages = _loadReferencedImages();
+      _userProfiles = await PersistenceRepository.instance.loadUserProfiles();
+      _functionFlags = await PersistenceRepository.instance.loadFunctionFlags();
+    }
+
     notifyListeners();
   }
 
@@ -61,13 +64,34 @@ class PersistenceProvider extends ChangeNotifier {
   }
 
   Future<void> updateCredentials(Credentials credentials) async {
+    // We update the local copy of the credentials for the UI to reflect the change instantly.
+    // Otherwise it feels like the app is not responding.
+    _credentials = credentials;
     await PersistenceRepository.instance.updateCredentials(credentials);
   }
 
   Future<void> markUserForPasswordReset(UserProfile userProfile) async {
+    // We update the local copy of the user profiles for the UI to reflect the change instantly.
+    // Otherwise it feels like the app is not responding.
+    _userProfiles = _userProfiles.map((profile) {
+      if (profile.uid == userProfile.uid) {
+        return userProfile.copyWith(
+          passwordResetNeeded: true,
+        );
+      }
+      return profile;
+    }).toList();
+
     await PersistenceRepository.instance.updateUserProfile(userProfile.copyWith(
       passwordResetNeeded: true,
     ));
+  }
+
+  Future<void> updateFunctionFlag(String functionName, bool enabled) async {
+    // We update the local copy of the function flag for the UI to reflect the change instantly.
+    // Otherwise it feels like the app is not responding.
+    _functionFlags[functionName] = enabled;
+    await PersistenceRepository.instance.updateFunctionFlag(functionName, enabled);
   }
 
   Future<void> deleteSchoolLifeItem(SchoolLifeItem item) async {

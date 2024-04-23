@@ -47,7 +47,6 @@ dependencies:
   flutter_image_compress: ^2.2.0
   go_router: ^13.2.3
   file_picker: ^8.0.0+1
-  easy_refresh: ^3.3.5
 
 dev_dependencies:
   flutter_test:

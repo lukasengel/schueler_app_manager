@@ -102,5 +102,6 @@
     "moveUp":"Nach oben",
     "moveDown":"Nach unten",
     "newElement":"Neues Element",
-    "editElement":"Element bearbeiten"
+    "editElement":"Element bearbeiten",
+    "cloudFunctions":"Cloudfunktionen"
 }
