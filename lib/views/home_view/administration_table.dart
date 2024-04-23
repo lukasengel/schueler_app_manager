@@ -49,6 +49,7 @@ class AdministrationTable extends StatelessWidget {
             final userProfile = userProfiles[index];
 
             return ListTile(
+              key: ValueKey(userProfile.uid),
               title: Text(userProfile.displayName),
               subtitle: Text(userProfile.uid),
               trailing: TextButton(
@@ -72,6 +73,7 @@ class AdministrationTable extends StatelessWidget {
             final entry = functionFlags.entries.elementAt(index);
 
             return ListTile(
+              key: ValueKey(entry.key),
               title: Text(entry.key),
               trailing: Switch(
                 onChanged: (value) => onToggleFunctionFlag(entry.key, value),
@@ -100,6 +102,7 @@ class AdministrationTable extends StatelessWidget {
                 final isReferenced = referencedImages.contains(image.$1);
 
                 return Container(
+                  key: ValueKey(image.$1),
                   height: 200,
                   width: 200,
                   clipBehavior: Clip.antiAliasWithSaveLayer,

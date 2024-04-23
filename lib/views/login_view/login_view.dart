@@ -71,12 +71,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      floatingActionButton: LanguageMenu(
-        onChanged: _changeLocale,
-        locales: AppLocalizations.supportedLocales,
-        localeDisplayNames: AppLocalizations.localeDisplayNames,
-        currentLocale: locale,
-      ),
+      floatingActionButton: ALLOW_LANGUAGE_CHANGE
+          ? LanguageMenu(
+              onChanged: _changeLocale,
+              locales: AppLocalizations.supportedLocales,
+              localeDisplayNames: AppLocalizations.localeDisplayNames,
+              currentLocale: locale,
+            )
+          : null,
       body: Center(
         child: Container(
           constraints: const BoxConstraints(

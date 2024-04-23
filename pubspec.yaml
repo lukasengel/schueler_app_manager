@@ -63,7 +63,7 @@ dev_dependencies:
 flutter_launcher_icons:
   web:
     generate: true
-    image_path: ".github/Logo_Manager_512.png"
+    image_path: ".github/icon_manager_512.png"
     background_color: "#4355B9"
     theme_color: "#4355B9"
 

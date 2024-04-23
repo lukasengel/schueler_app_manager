@@ -94,14 +94,17 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
                 );
               }),
             ),
-            const SizedBox(height: 5),
-            LanguageMenu(
-              onChanged: _onChangeLanguage,
-              locales: AppLocalizations.supportedLocales,
-              localeDisplayNames: AppLocalizations.localeDisplayNames,
-              currentLocale: ref.watch(settingsProvider.select((value) => value.localSettings.locale)),
-              useTextButton: true,
-            ),
+            if (ALLOW_LANGUAGE_CHANGE)
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: LanguageMenu(
+                  onChanged: _onChangeLanguage,
+                  locales: AppLocalizations.supportedLocales,
+                  localeDisplayNames: AppLocalizations.localeDisplayNames,
+                  currentLocale: ref.watch(settingsProvider.select((value) => value.localSettings.locale)),
+                  useTextButton: true,
+                ),
+              ),
           ],
         ),
       ),

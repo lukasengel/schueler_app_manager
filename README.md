@@ -1,4 +1,4 @@
-<img alt="Logo" src=".github/logo_manager_512.png" height="200">
+<img alt="Logo" src=".github/icon_manager_512.png" height="200">
 
 # Schüler-App Manager
 
@@ -19,7 +19,7 @@ Erreichbar unter: https://gg-schueler-app.web.app/
   - [X] Einstellungen der Datenquelle
   - [X] Änderung der Zugangsdaten
   - [X] Verwaltung der gespeicherten Bilder
-  - [ ] Verwaltung der Cloud-Funktionen
+  - [x] Verwaltung der Cloud-Funktionen
 
 ## Lizenz
 

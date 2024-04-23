@@ -14,6 +14,7 @@
     "dismiss":"Schliessen",
     "logout":"Abmelden",
     "refresh":"Aktualisieren",
+    "synchronizing":"Synchronisiere",
     "schoolLife":"Schulleben",
     "teachers":"Lehrer",
     "broadcasts":"Rundnachrichten",
@@ -42,8 +43,10 @@
     "readOnlyElement":"Dieses Element ist schreibgeschützt.",
     "elementAlreadyExists":"Dieses Element existiert bereits.",
     "credentials":"Konfiguration der Datenquelle",
-    "url":"URL zum Vertretungsplan",
+    "userManagement":"Nutzerverwaltung",
+    "cloudFunctions":"Cloudfunktionen",
     "imageManagement":"Bilderverwaltung",
+    "url":"URL zum Vertretungsplan",
     "inUse":"Bild in Verwendung",
     "darkMode":"Dunkel",
     "systemScheme":"System",
@@ -55,7 +58,6 @@
     "confirmPassword":"Passwort bestätigen",
     "passwordsDoNotMatch":"Die Passwörter stimmen nicht überein.",
     "passwordTooShort":"Das Passwort ist zu kurz. Mindestlänge: 6",
-    "userManagement":"Nutzerverwaltung",
     "resetPassword":"Passwort zurücksetzen",
     "passwordChangeSuccess":"Passwort erfolgreich geändert.",
     "confirmResetPasswordTitle":"Passwort zurücksetzen?",
@@ -102,6 +104,5 @@
     "moveUp":"Nach oben",
     "moveDown":"Nach unten",
     "newElement":"Neues Element",
-    "editElement":"Element bearbeiten",
-    "cloudFunctions":"Cloudfunktionen"
+    "editElement":"Element bearbeiten"
 }

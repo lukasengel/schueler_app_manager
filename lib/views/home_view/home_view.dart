@@ -277,13 +277,31 @@ class _HomeViewState extends ConsumerState<HomeView> {
           children: [
             const Text("Schüler-App Manager"),
             if (_loading)
-              Container(
-                margin: const EdgeInsets.only(left: 10),
-                height: 35,
-                width: 35,
-                child: LoadingIndicator(
-                  indicatorType: Indicator.ballSpinFadeLoader,
-                  colors: [Theme.of(context).colorScheme.primary],
+              Card.filled(
+                margin: const EdgeInsets.only(left: 15),
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  height: 40,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      LoadingIndicator(
+                        indicatorType: Indicator.ballSpinFadeLoader,
+                        colors: [Theme.of(context).colorScheme.onPrimaryContainer],
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        AppLocalizations.of(context).translate("synchronizing"),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
           ],
