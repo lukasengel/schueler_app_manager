@@ -167,66 +167,68 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         const SizedBox(height: 5),
         Text(AppLocalizations.of(context).translate("loginMessage")),
         const SizedBox(height: 10),
-        Column(
-          children: [
-            TextField(
-              controller: _usernameController,
-              textInputAction: TextInputAction.next,
-              autofillHints: const [
-                AutofillHints.username,
-              ],
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context).translate("username"),
-                errorText: usernameErrorMsg,
-              ),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9]")),
-              ],
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _passwordController,
-              obscureText: _hidePassword,
-              onSubmitted: (_) => _login(),
-              autofillHints: const [
-                AutofillHints.password,
-              ],
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context).translate("password"),
-                suffixIcon: IconButton(
-                  icon: Icon(_hidePassword ? Icons.visibility : Icons.visibility_off),
-                  tooltip: AppLocalizations.of(context).translate(_hidePassword ? "showPassword" : "hidePassword"),
-                  onPressed: _toggleHidePassword,
-                  focusNode: FocusNode(skipTraversal: true),
+        AutofillGroup(
+          child: Column(
+            children: [
+              TextField(
+                controller: _usernameController,
+                textInputAction: TextInputAction.next,
+                autofillHints: const [
+                  AutofillHints.username,
+                ],
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context).translate("username"),
+                  errorText: usernameErrorMsg,
                 ),
-                errorText: passwordErrorMsg,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9]")),
+                ],
               ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Checkbox(
-                  onChanged: (_) => _toggleStaySignedIn(),
-                  value: _staySignedIn,
+              const SizedBox(height: 10),
+              TextField(
+                controller: _passwordController,
+                obscureText: _hidePassword,
+                onSubmitted: (_) => _login(),
+                autofillHints: const [
+                  AutofillHints.password,
+                ],
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context).translate("password"),
+                  suffixIcon: IconButton(
+                    icon: Icon(_hidePassword ? Icons.visibility : Icons.visibility_off),
+                    tooltip: AppLocalizations.of(context).translate(_hidePassword ? "showPassword" : "hidePassword"),
+                    onPressed: _toggleHidePassword,
+                    focusNode: FocusNode(skipTraversal: true),
+                  ),
+                  errorText: passwordErrorMsg,
                 ),
-                Text(AppLocalizations.of(context).translate("staySignedIn")),
-              ],
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 45,
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: _login,
-                child: _working
-                    ? LoadingIndicator(
-                        indicatorType: Indicator.ballPulseSync,
-                        colors: [Theme.of(context).colorScheme.onPrimary],
-                      )
-                    : Text(AppLocalizations.of(context).translate("login")),
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Checkbox(
+                    onChanged: (_) => _toggleStaySignedIn(),
+                    value: _staySignedIn,
+                  ),
+                  Text(AppLocalizations.of(context).translate("staySignedIn")),
+                ],
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 45,
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: _login,
+                  child: _working
+                      ? LoadingIndicator(
+                          indicatorType: Indicator.ballPulseSync,
+                          colors: [Theme.of(context).colorScheme.onPrimary],
+                        )
+                      : Text(AppLocalizations.of(context).translate("login")),
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 15),
         Text(
