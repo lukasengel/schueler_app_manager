@@ -221,7 +221,7 @@ class FirebasePersistenceRepository extends PersistenceRepository {
       final content = snapshot.value;
 
       if (content != null && content is Map) {
-        content.removeWhere((key, value) => key == "latestState");
+        content.removeWhere((key, value) => key == "meta");
         return Map<String, bool>.from(content);
       }
 
