@@ -72,13 +72,11 @@ class AdministrationTable extends StatelessWidget {
           children: List.generate(functionFlags.entries.length, (index) {
             final entry = functionFlags.entries.elementAt(index);
 
-            return ListTile(
+            return SwitchListTile(
               key: ValueKey(entry.key),
               title: Text(entry.key),
-              trailing: Switch(
-                onChanged: (value) => onToggleFunctionFlag(entry.key, value),
-                value: entry.value,
-              ),
+              onChanged: (value) => onToggleFunctionFlag(entry.key, value),
+              value: entry.value,
             );
           }),
         ),
